@@ -4,8 +4,13 @@
             <font-awesome-icon :icon="['fas', 'list-ul']" /> Control de Cortes
         </div>
         <div class="card-body">
-            <ag-grid-vue style="width: 100%; height: 500px" :class="themeClass" :columnDefs="columnDefs"
-                :defaultColDef="defaultColDef" :rowData="rowData">
+            <ag-grid-vue
+                style="width: 100%; height: 500px"
+                :class="themeClass"
+                :columnDefs="columnDefs"
+                :defaultColDef="defaultColDef"
+                :rowData="rowData"
+            >
             </ag-grid-vue>
         </div>
     </div>
@@ -68,8 +73,8 @@ export default {
     components: {
         AgGridVue,
     },
-    created() { },
-    mounted() { },
+    created() {},
+    mounted() {},
     methods: {},
 };
 </script>

@@ -8,6 +8,8 @@
     <nav class="dash-nav-list">
         <a href="{{ route('home') }}" class="dash-nav-item">
             <i class="fas fa-home"></i> Principal </a>
+        <a href="{{ route('corte.index') }}" class="dash-nav-item">
+            <i class="fa-solid fa-shirt"></i> Cortes </a>
         <div class="dash-nav-dropdown">
             <a href="#!" class="dash-nav-item dash-nav-dropdown-toggle">
                 <i class="fas fa-chart-bar"></i> Terceros </a>

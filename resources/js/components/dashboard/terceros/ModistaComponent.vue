@@ -1,15 +1,37 @@
 <template>
     <div class="card">
         <div class="card-header">
-            <font-awesome-icon :icon="['fas', 'list-ul']" /> Control de Cortes
+            <font-awesome-icon :icon="['fas', 'users']" /> Control de Modistas
         </div>
         <div class="card-body">
-            <!-- Botón para abrir el modal -->
-            <button class="btn btn-primary" @click="showModal">Agregar Nuevo Modista</button>
-            <add-modista-modal @save="handleNewModista"></add-modista-modal>
+            <div class="button-container">
+                <button
+                    class="btn btn-primary mb-2 my-buttons"
+                    @click="showModal(true)"
+                >
+                    <font-awesome-icon :icon="['fas', 'plus']" />
+                </button>
+                <modista-create-or-update-modal
+                    :manage-modista="manageModista"
+                    :data-form="dataForm"
+                    @save="handleNewModista"
+                    @update="handleUpdatedModista"
+                ></modista-create-or-update-modal>
+            </div>
 
-            <ag-grid-vue style="width: 100%; height: 500px" :class="themeClass" :columnDefs="columnDefs"
-                :defaultColDef="defaultColDef" :rowData="rowData">
+            <ag-grid-vue
+                style="width: 100%; height: 550px"
+                :class="themeClass"
+                :columnDefs="columnDefs"
+                :defaultColDef="defaultColDef"
+                :rowData="rowData"
+                :pagination="true"
+                :paginationPageSize="10"
+                :paginationPageSizeSelector="[10, 20, 30]"
+                :localeText="spanishText"
+                @grid-ready="onGridReady"
+                @cell-clicked="onCellClicked"
+            >
             </ag-grid-vue>
         </div>
     </div>
@@ -18,74 +40,124 @@
 <script>
 // Importar Librerias o Modulos
 import { AgGridVue } from "ag-grid-vue3";
-import AddModistaModal from './acciones/AddModistaModal.vue';
+import spanishText from "../../../translations/spanishText";
+import ModistaCreateOrUpdateModal from "./acciones/ModistaCreateOrUpdateModal.vue";
 
 export default {
     data() {
         return {
+            spanishText,
             defaultColDef: {
                 sortable: true,
                 flex: 1,
                 minWidth: 100,
-                resizable: true,
+                resizable: false,
             },
-            rowData: [
-                {
-                    mission: "Voyager",
-                    company: "NASA",
-                    location: "Cape Canaveral",
-                    date: "1977-09-05",
-                    rocket: "Titan-Centaur ",
-                    price: 86580000,
-                    successful: true,
-                },
-                {
-                    mission: "Apollo 13",
-                    company: "NASA",
-                    location: "Kennedy Space Center",
-                    date: "1970-04-11",
-                    rocket: "Saturn V",
-                    price: 3750000,
-                    successful: false,
-                },
-                {
-                    mission: "Falcon 9",
-                    company: "SpaceX",
-                    location: "Cape Canaveral",
-                    date: "2015-12-22",
-                    rocket: "Falcon 9",
-                    price: 9750000,
-                    successful: true,
-                },
-            ],
-            columnDefs: [
-                { field: "mission" },
-                { field: "company" },
-                { field: "location" },
-                { field: "date" },
-                { field: "price" },
-                { field: "successful" },
-                { field: "rocket" },
-            ],
+            rowData: [],
+            columnDefs: [],
             themeClass: "ag-theme-alpine",
-            showAddModistaModal: false
+            showAddModistaModal: false,
+            manageModista: true, // true - create / false - update
+            dataForm: {},
+            currentPage: 0,
         };
     },
     components: {
         AgGridVue,
-        AddModistaModal
+        spanishText,
+        ModistaCreateOrUpdateModal,
     },
-    created() { },
-    mounted() { },
+    created() {
+        this.loadModistas();
+    },
+    mounted() {},
     methods: {
-        showModal() {
-            var myModal = new bootstrap.Modal(document.getElementById('addRecordModal'), {});
+        onGridReady(params) {
+            this.gridApi = params.api;
+            this.gridColumnApi = params.columnApi;
+        },
+        loadModistas() {
+            this.columnDefs = [
+                {
+                    headerName: "Nombre",
+                    field: "nombre",
+                    cellStyle: { textAlign: "center" },
+                },
+                {
+                    headerName: "Dirección",
+                    field: "direccion",
+                    cellStyle: { textAlign: "center" },
+                },
+                {
+                    headerName: "Celular",
+                    field: "celular",
+                    cellStyle: { textAlign: "center" },
+                },
+                {
+                    headerName: "Acciones",
+                    field: "acciones",
+                    headerClass: "actions",
+                    cellStyle: { textAlign: "center", cursor: "pointer" },
+                    cellRenderer: function (params) {
+                        return `<span><i class='fas fa-pencil'></i></span>`;
+                    },
+                },
+            ];
+            var params = {
+                page: this.currentPage,
+                limit: this.pageSize,
+            };
+            this.$axios
+                .get("/modista/list", { params })
+                .then((response) => {
+                    this.rowData = response.data;
+                })
+                .catch((error) => {
+                    this.$readStatusHttp(error);
+                });
+        },
+        onCellClicked(event) {
+            if (event.colDef.field === "acciones") {
+                this.$axios
+                    .get(`/modista/show/${event.data.id}`)
+                    .then((response) => {
+                        this.dataForm = response.data;
+                        this.showModal(false);
+                    })
+                    .catch((error) => {
+                        this.$readStatusHttp(error);
+                    });
+            }
+        },
+        showModal(type) {
+            this.manageModista = type;
+            this.dataForm = type ? {} : this.dataForm;
+            var myModal = new bootstrap.Modal(
+                document.getElementById("addRecordModal"),
+                {}
+            );
             myModal.show();
         },
         handleNewModista(newRecord) {
-            console.log("Nuevo registro agregado:", newRecord);
-            // Aquí puedes añadir lógica para manejar el nuevo registro, como enviarlo a un servidor
-        }
+            this.$axios
+                .post("/modista/store", newRecord)
+                .then((response) => {
+                    this.loadModistas();
+                })
+                .catch((error) => {
+                    this.$readStatusHttp(error);
+                });
+        },
+        handleUpdatedModista(newRecord) {
+            this.$axios
+                .post("/modista/update/" + newRecord.id, newRecord)
+                .then((response) => {
+                    this.loadModistas();
+                })
+                .catch((error) => {
+                    this.$readStatusHttp(error);
+                });
+        },
     },
 };
 </script>

@@ -10,4 +10,19 @@ class ModistaRepository
     {
         return Modista::create($data);
     }
+
+    public static function update(Modista $model, $data)
+    {
+        return $model->update($data);
+    }
+
+    public static function getAll()
+    {
+        return Modista::all();
+    }
+
+    public static function getByID($id)
+    {
+        return Modista::find($id);
+    }
 }

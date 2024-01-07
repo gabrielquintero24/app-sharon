@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class CreateModistaRequest extends FormRequest
+class UpdateModistaRequest extends FormRequest
 {
     public function rules()
     {
