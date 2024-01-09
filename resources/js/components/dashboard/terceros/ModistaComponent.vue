@@ -1,7 +1,7 @@
 <template>
     <div class="card">
         <div class="card-header">
-            <font-awesome-icon :icon="['fas', 'users']" /> Control de Modistas
+            <font-awesome-icon :icon="['fas', 'list-ul']" /> Control de Modistas
         </div>
         <div class="card-body">
             <div class="button-container">
@@ -18,122 +18,167 @@
                     @update="handleUpdatedModista"
                 ></modista-create-or-update-modal>
             </div>
-
-            <ag-grid-vue
-                style="width: 100%; height: 550px"
-                :class="themeClass"
-                :columnDefs="columnDefs"
-                :defaultColDef="defaultColDef"
-                :rowData="rowData"
-                :pagination="true"
-                :paginationPageSize="10"
-                :paginationPageSizeSelector="[10, 20, 30]"
-                :localeText="spanishText"
-                @grid-ready="onGridReady"
-                @cell-clicked="onCellClicked"
+            <DataTable
+                v-model:filters="filters"
+                :loading="loading"
+                :value="modistas"
+                :paginator="true"
+                :rows="perPage"
+                :sortField="sortField"
+                :sortOrder="sortOrder"
+                :totalRecords="totalRecords"
+                :lazy="true"
+                @page="onPage"
+                @sort="onSort"
+                @filter="onFilters"
+                filterDisplay="menu"
+                removableSort
             >
-            </ag-grid-vue>
+                <Column
+                    field="nombre"
+                    header="Nombres"
+                    sortable
+                    :showClearButton="false"
+                >
+                    <template #body="{ data }"> {{ data.nombre }} </template
+                    ><template #filter="{ filterModel }">
+                        <InputText
+                            v-model="filterModel.value"
+                            type="text"
+                            class="p-column-filter"
+                            placeholder="Buscar por nombre" /></template
+                ></Column>
+                <Column
+                    field="direccion"
+                    header="Dirección"
+                    sortable
+                    :showClearButton="false"
+                >
+                    <template #body="{ data }"> {{ data.direccion }} </template
+                    ><template #filter="{ filterModel }">
+                        <InputText
+                            v-model="filterModel.value"
+                            type="text"
+                            class="p-column-filter"
+                            placeholder="Buscar por direccion" /></template
+                ></Column>
+                <Column
+                    field="celular"
+                    header="Celular"
+                    sortable
+                    :showClearButton="false"
+                >
+                    <template #body="{ data }"> {{ data.celular }} </template
+                    ><template #filter="{ filterModel }">
+                        <InputText
+                            v-model="filterModel.value"
+                            type="text"
+                            class="p-column-filter"
+                            placeholder="Buscar por celular" /></template
+                ></Column>
+                <Column header="Acciones" field="acciones">
+                    <template #body="slotProps">
+                        <span
+                            @click="onRowAction(slotProps.data)"
+                           
+                        >
+                            <i class="fas fa-pencil"></i>
+                        </span>
+                    </template>
+                </Column>
+            </DataTable>
         </div>
     </div>
 </template>
 
 <script>
 // Importar Librerias o Modulos
-import { AgGridVue } from "ag-grid-vue3";
-import spanishText from "../../../translations/spanishText";
+import Column from "primevue/column";
+import Button from "primevue/button";
+import DataTable from "primevue/datatable";
+import InputText from "primevue/inputtext";
+import { FilterMatchMode, FilterOperator } from "primevue/api";
 import ModistaCreateOrUpdateModal from "./acciones/ModistaCreateOrUpdateModal.vue";
 
 export default {
     data() {
         return {
-            spanishText,
-            defaultColDef: {
-                sortable: true,
-                flex: 1,
-                minWidth: 100,
-                resizable: false,
-            },
-            rowData: [],
-            columnDefs: [],
-            themeClass: "ag-theme-alpine",
-            showAddModistaModal: false,
-            manageModista: true, // true - create / false - update
+            modistas: [],
+            perPage: 2,
+            totalRecords: 0,
+            page: 1,
+            sortField: "",
+            sortOrder: null,
+            filters: null,
+            filtroInfo: [],
+            loading: true,
+            manageModista: true,
             dataForm: {},
-            currentPage: 0,
         };
     },
     components: {
-        AgGridVue,
-        spanishText,
+        Column,
+        Button,
+        DataTable,
+        InputText,
+        FilterMatchMode,
+        FilterOperator,
         ModistaCreateOrUpdateModal,
     },
     created() {
-        this.loadModistas();
+        this.initFilters();
     },
-    mounted() {},
+    mounted() {
+        this.fetchModistas();
+    },
     methods: {
-        onGridReady(params) {
-            this.gridApi = params.api;
-            this.gridColumnApi = params.columnApi;
-        },
-        loadModistas() {
-            this.columnDefs = [
-                {
-                    headerName: "Nombre",
-                    field: "nombre",
-                    cellStyle: { textAlign: "center" },
+        initFilters() {
+            this.filters = {
+                nombre: {
+                    clear: false,
+                    constraints: [
+                        { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+                    ],
                 },
-                {
-                    headerName: "Dirección",
-                    field: "direccion",
-                    cellStyle: { textAlign: "center" },
+                direccion: {
+                    constraints: [
+                        { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+                    ],
                 },
-                {
-                    headerName: "Celular",
-                    field: "celular",
-                    cellStyle: { textAlign: "center" },
+                celular: {
+                    constraints: [
+                        { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+                    ],
                 },
-                {
-                    headerName: "Acciones",
-                    field: "acciones",
-                    headerClass: "actions",
-                    cellStyle: { textAlign: "center", cursor: "pointer" },
-                    cellRenderer: function (params) {
-                        return `<span><i class='fas fa-pencil'></i></span>`;
-                    },
-                },
-            ];
-            var params = {
-                page: this.currentPage,
-                limit: this.pageSize,
             };
+        },
+        fetchModistas() {
             this.$axios
-                .get("/modista/list", { params })
+                .get("/modista/list", {
+                    params: {
+                        page: this.page,
+                        perPage: this.perPage,
+                        sort: [this.sortField, this.sortOrder],
+                        filters: this.filtroInfo,
+                    },
+                })
                 .then((response) => {
-                    this.rowData = response.data;
+                    this.modistas = response.data.data;
+                    this.totalRecords = response.data.total;
+                    this.loading = false;
                 })
                 .catch((error) => {
-                    this.$readStatusHttp(error);
+                    console.error(
+                        "Hubo un error al obtener los datos: ",
+                        error
+                    );
                 });
-        },
-        onCellClicked(event) {
-            if (event.colDef.field === "acciones") {
-                this.$axios
-                    .get(`/modista/show/${event.data.id}`)
-                    .then((response) => {
-                        this.dataForm = response.data;
-                        this.showModal(false);
-                    })
-                    .catch((error) => {
-                        this.$readStatusHttp(error);
-                    });
-            }
         },
         showModal(type) {
             this.manageModista = type;
             this.dataForm = type ? {} : this.dataForm;
             var myModal = new bootstrap.Modal(
-                document.getElementById("addRecordModal"),
+                document.getElementById("manageModistaModal"),
                 {}
             );
             myModal.show();
@@ -142,7 +187,7 @@ export default {
             this.$axios
                 .post("/modista/store", newRecord)
                 .then((response) => {
-                    this.loadModistas();
+                    this.fetchModistas();
                 })
                 .catch((error) => {
                     this.$readStatusHttp(error);
@@ -152,12 +197,64 @@ export default {
             this.$axios
                 .post("/modista/update/" + newRecord.id, newRecord)
                 .then((response) => {
-                    this.loadModistas();
+                    this.fetchModistas();
                 })
                 .catch((error) => {
                     this.$readStatusHttp(error);
                 });
         },
+        onRowAction(data) {
+            this.$axios
+                .get(`/modista/show/${data.id}`)
+                .then((response) => {
+                    this.dataForm = response.data;
+                    this.showModal(false);
+                })
+                .catch((error) => {
+                    this.$readStatusHttp(error);
+                });
+        },
+        onPage(event) {
+            this.page = event.page + 1;
+            this.rows = event.rows;
+            this.fetchModistas();
+        },
+        onSort(event) {
+            this.sortField = event.sortField;
+            this.sortOrder = event.sortOrder;
+            this.fetchModistas();
+        },
+        onFilters(event) {
+            this.filtroInfo = [];
+            for (const [key, filter] of Object.entries(event.filters)) {
+                if (filter.constraints) {
+                    for (const constraint of filter.constraints) {
+                        if (constraint.value) {
+                            this.filtroInfo.push([
+                                key,
+                                constraint.matchMode,
+                                constraint.value,
+                            ]);
+                        }
+                    }
+                }
+            }
+            this.fetchModistas();
+        },
+        openNew() {
+            this.product = {};
+            this.submitted = false;
+            this.productDialog = true;
+        },
     },
 };
 </script>
+<style>
+.p-dropdown-items-wrapper ul {
+    padding-left: 0px !important;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+    background-color: #55dee7; /* Elige el color de fondo que prefieras */
+}
+</style>

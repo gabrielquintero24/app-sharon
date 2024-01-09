@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Terceros;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\Terceros\Modista;
 use Illuminate\Support\Facades\Log;
@@ -46,11 +47,14 @@ class ModistaController extends Controller
         }
     }
 
-    public function getModistas()
+    public function getModistas(Request $request)
     {
         try {
-            $modistas = $this->repository->getAll();
-            return response()->json($modistas, Response::HTTP_OK);
+            $query = $this->setQuery();
+            return renderDataTable(
+                $query,
+                $request
+            );
         } catch (\Exception $e) {
             Log::debug($e->getMessage());
             return response()->json([], Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -66,5 +70,11 @@ class ModistaController extends Controller
             Log::debug($e->getMessage());
             return response()->json([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+
+    private function setQuery()
+    {
+        return Modista::query();
     }
 }

@@ -20,6 +20,8 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,600|Open+Sans:400,600,700" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('/template/css/spur.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/dash.css') }}">
+<link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.6/dist/vue-multiselect.min.css">
+
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
@@ -41,6 +43,7 @@
         integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous">
     </script>
     <script src="{{ asset('/template/js/spur.js') }}"></script>
+    <script src="https://unpkg.com/vue-multiselect@2.1.6"></script>
     @yield('script')
 </body>
 

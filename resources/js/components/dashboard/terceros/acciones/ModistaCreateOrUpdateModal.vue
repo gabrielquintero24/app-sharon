@@ -1,15 +1,15 @@
 <template>
     <div
         class="modal fade"
-        id="addRecordModal"
+        id="manageModistaModal"
         tabindex="-1"
-        aria-labelledby="addRecordModalLabel"
+        aria-labelledby="manageModistaModalLabel"
         aria-hidden="true"
     >
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addRecordModalLabel">
+                    <h5 class="modal-title" id="manageModistaModalLabel">
                         {{ manageModista ? "Agregar" : "Editar" }} Modista
                     </h5>
                     <button
@@ -120,7 +120,7 @@ export default {
         };
     },
     mounted() {
-        var myModalEl = document.getElementById("addRecordModal");
+        var myModalEl = document.getElementById("manageModistaModal");
         myModalEl.addEventListener("hidden.bs.modal", () => {
             this.resetForm();
         });
@@ -144,7 +144,7 @@ export default {
                             this.$emit("update", this.form);
                         }
                         var myModalEl =
-                            document.getElementById("addRecordModal");
+                            document.getElementById("manageModistaModal");
                         var modal = bootstrap.Modal.getInstance(myModalEl);
                         modal.hide();
                     }

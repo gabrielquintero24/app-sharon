@@ -7,7 +7,7 @@
             @include('dashboard.nav.nav_sup')
             <main class="dash-content">
                 <div class="container-fluid">
-                   
+                    <dash-corte-component></dash-corte-component>
                 </div>
             </main>
         </div>
