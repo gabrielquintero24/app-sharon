@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Log;
 
-function renderDataTable($query, $request)
+function renderDataTable($query, $request , $with = [], $select = false)
 {
     # Ordenamiento
     if ($request->has('sort') && !empty($request->input('sort')) && !empty($request->input('sort')[0])) {
@@ -24,7 +24,7 @@ function renderDataTable($query, $request)
 
     //Log::debug($query->toSql());
     $perPage = $request->input('perPage');
-    return $query->paginate($perPage);
+    return $query->with($with)->select($select)->paginate($perPage);
 }
 
 function getSqlOperator($operator)

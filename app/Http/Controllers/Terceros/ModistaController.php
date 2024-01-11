@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Terceros\ModistaRepository;
 use App\Http\Requests\Terceros\CreateModistaRequest;
 use App\Http\Requests\Terceros\UpdateModistaRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class ModistaController extends Controller
 {
@@ -53,7 +54,12 @@ class ModistaController extends Controller
             $query = $this->setQuery();
             return renderDataTable(
                 $query,
-                $request
+                $request,
+                Modista::RELATION_SHIPS,
+                [
+                    'modista.*',
+                    'enum_tipo_modista.name'
+                ]
             );
         } catch (\Exception $e) {
             Log::debug($e->getMessage());
@@ -75,6 +81,7 @@ class ModistaController extends Controller
 
     private function setQuery()
     {
-        return Modista::query();
+        return Modista::query()
+            ->leftJoin('enums as enum_tipo_modista', 'enum_tipo_modista.id', '=', 'modista.tipo_modista_id');
     }
 }

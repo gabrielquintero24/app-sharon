@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('modista', function (Blueprint $table) {
             $table->id();
-            $table->string("nombre");
-            $table->string("direccion")->nullable();
-            $table->integer("celular")->nullable();
+            $table->string('nombre');
+            $table->string('direccion')->nullable();
+            $table->integer('celular')->nullable();
+            $table->foreignId('tipo_modista_id')->constrained(table: 'enums');
             $table->timestamps();
         });
     }

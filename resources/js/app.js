@@ -4,7 +4,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 // Importacion de funciones compartidas
-import shared from "./components/shared";
+import shared from "./utils/shared";
 
 // Importar AG-Grid y sus estilos
 import { AgGridVue } from "ag-grid-vue3";
@@ -14,6 +14,7 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 // Importacion PrimeVue
 import PrimeVue from "primevue/config";
 import esLocale from "./translations/primevue-es.json";
+import "primeicons/primeicons.css";
 import "primevue/resources/themes/bootstrap4-light-blue/theme.css";
 
 // Libreria font awesome
@@ -46,10 +47,6 @@ app.use(PrimeVue, {
     /* unstyled: true  */
 });
 
-// Registrar funciones compartidas
-app.mixin(shared.AlertsComponent);
-app.mixin(shared.ReadHttpStatusErrors);
-
 // Componentes
 import PrincipalComponent from "./components/dashboard/PrincipalComponent.vue";
 import ModistaComponent from "./components/dashboard/terceros/ModistaComponent.vue";
@@ -67,6 +64,12 @@ app.config.globalProperties.$swal = Swal;
 
 // Localidad de PrimeVue
 app.config.globalProperties.$primevue.config.locale = esLocale;
+
+// Registrar funciones compartidas
+app.mixin(shared.AlertsComponent);
+app.mixin(shared.ReadHttpStatusErrors);
+app.mixin(shared.HelperFunctions);
+app.mixin(shared.RelationsTables);
 
 // Montar la aplicación
 app.mount("#app");

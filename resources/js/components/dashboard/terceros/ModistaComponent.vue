@@ -4,20 +4,24 @@
             <font-awesome-icon :icon="['fas', 'list-ul']" /> Control de Modistas
         </div>
         <div class="card-body">
-            <div class="button-container">
-                <button
-                    class="btn btn-primary mb-2 my-buttons"
-                    @click="showModal(true)"
-                >
-                    <font-awesome-icon :icon="['fas', 'plus']" />
-                </button>
-                <modista-create-or-update-modal
-                    :manage-modista="manageModista"
-                    :data-form="dataForm"
-                    @save="handleNewModista"
-                    @update="handleUpdatedModista"
-                ></modista-create-or-update-modal>
-            </div>
+            <modista-create-or-update-modal
+                :manage-modista="manageModista"
+                :data-form="dataForm"
+                :visible-modal="visibleModal"
+                @save="handleNewModista"
+                @update="handleUpdatedModista"
+                @hidden="hiddenModal"
+            ></modista-create-or-update-modal>
+
+            <Toolbar>
+                <template #end>
+                    <Button
+                        icon="pi pi-plus"
+                        class="mr-2 custom-button-icon"
+                        @click="showModal(true)"
+                    />
+                </template>
+            </Toolbar>
             <DataTable
                 v-model:filters="filters"
                 :loading="loading"
@@ -33,6 +37,7 @@
                 @filter="onFilters"
                 filterDisplay="menu"
                 removableSort
+                stripedRows
             >
                 <Column
                     field="nombre"
@@ -76,11 +81,26 @@
                             class="p-column-filter"
                             placeholder="Buscar por celular" /></template
                 ></Column>
+                <Column
+                    field="tipo_modista_id"
+                    header="Tipo"
+                    sortable
+                    :showClearButton="false"
+                >
+                    <template #body="{ data }">
+                        {{ data.tipo_modista.name }} </template
+                    ><template #filter="{ filterModel }">
+                        <InputText
+                            v-model="filterModel.value"
+                            type="text"
+                            class="p-column-filter"
+                            placeholder="Buscar por tipo" /></template
+                ></Column>
                 <Column header="Acciones" field="acciones">
                     <template #body="slotProps">
                         <span
+                            style="cursor: pointer"
                             @click="onRowAction(slotProps.data)"
-                           
                         >
                             <i class="fas fa-pencil"></i>
                         </span>
@@ -97,6 +117,7 @@ import Column from "primevue/column";
 import Button from "primevue/button";
 import DataTable from "primevue/datatable";
 import InputText from "primevue/inputtext";
+import Toolbar from "primevue/toolbar";
 import { FilterMatchMode, FilterOperator } from "primevue/api";
 import ModistaCreateOrUpdateModal from "./acciones/ModistaCreateOrUpdateModal.vue";
 
@@ -104,7 +125,7 @@ export default {
     data() {
         return {
             modistas: [],
-            perPage: 2,
+            perPage: 3,
             totalRecords: 0,
             page: 1,
             sortField: "",
@@ -114,6 +135,8 @@ export default {
             loading: true,
             manageModista: true,
             dataForm: {},
+            rpTipoModista: null,
+            visibleModal: false,
         };
     },
     components: {
@@ -121,6 +144,7 @@ export default {
         Button,
         DataTable,
         InputText,
+        Toolbar,
         FilterMatchMode,
         FilterOperator,
         ModistaCreateOrUpdateModal,
@@ -150,6 +174,11 @@ export default {
                         { value: null, matchMode: FilterMatchMode.STARTS_WITH },
                     ],
                 },
+                tipo_modista_id: {
+                    constraints: [
+                        { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+                    ],
+                },
             };
         },
         fetchModistas() {
@@ -168,20 +197,17 @@ export default {
                     this.loading = false;
                 })
                 .catch((error) => {
-                    console.error(
-                        "Hubo un error al obtener los datos: ",
-                        error
-                    );
+                    this.$readStatusHttp(error);
+                    this.loading = false;
                 });
         },
         showModal(type) {
             this.manageModista = type;
             this.dataForm = type ? {} : this.dataForm;
-            var myModal = new bootstrap.Modal(
-                document.getElementById("manageModistaModal"),
-                {}
-            );
-            myModal.show();
+            this.visibleModal = true;
+        },
+        hiddenModal(status){
+            this.visibleModal = status;
         },
         handleNewModista(newRecord) {
             this.$axios
@@ -216,22 +242,24 @@ export default {
         },
         onPage(event) {
             this.page = event.page + 1;
-            this.rows = event.rows;
+            this.perPage = event.rows;
             this.fetchModistas();
         },
         onSort(event) {
+            this.page = 1;
             this.sortField = event.sortField;
             this.sortOrder = event.sortOrder;
             this.fetchModistas();
         },
         onFilters(event) {
+            this.page = 1;
             this.filtroInfo = [];
             for (const [key, filter] of Object.entries(event.filters)) {
                 if (filter.constraints) {
                     for (const constraint of filter.constraints) {
                         if (constraint.value) {
                             this.filtroInfo.push([
-                                key,
+                                this.$relationTableModista(key),
                                 constraint.matchMode,
                                 constraint.value,
                             ]);
@@ -241,20 +269,6 @@ export default {
             }
             this.fetchModistas();
         },
-        openNew() {
-            this.product = {};
-            this.submitted = false;
-            this.productDialog = true;
-        },
     },
 };
 </script>
-<style>
-.p-dropdown-items-wrapper ul {
-    padding-left: 0px !important;
-}
-
-.p-datatable .p-datatable-thead > tr > th {
-    background-color: #55dee7; /* Elige el color de fondo que prefieras */
-}
-</style>

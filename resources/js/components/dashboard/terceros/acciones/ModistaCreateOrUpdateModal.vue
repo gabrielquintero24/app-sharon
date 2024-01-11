@@ -1,103 +1,113 @@
 <template>
-    <div
-        class="modal fade"
-        id="manageModistaModal"
-        tabindex="-1"
-        aria-labelledby="manageModistaModalLabel"
-        aria-hidden="true"
+    <Dialog
+        v-model:visible="visible"
+        :style="{ width: '450px' }"
+        :header="manageModista ? 'Agregar Modista' : 'Editar Modista'"
+        :modal="true"
+        class="p-fluid p-dialog-top"
+        :position="'top'"
+        @hide="handleDialogClose"
     >
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="manageModistaModalLabel">
-                        {{ manageModista ? "Agregar" : "Editar" }} Modista
-                    </h5>
-                    <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                    ></button>
-                </div>
-                <div class="modal-body">
-                    <Form
-                        @submit="submitForm"
-                        :validation-schema="schemaCreate"
-                        v-slot="{ errors }"
-                        ref="form"
-                    >
-                        <div class="form-group mb-3">
-                            <label for="nombre">Nombre</label>
-                            <Field
-                                name="nombre"
-                                type="text"
-                                v-model="form.nombre"
-                                class="form-control"
-                                :class="{ 'is-invalid': errors['nombre'] }"
-                            />
-                            <ErrorMessage
-                                name="nombre"
-                                class="invalid-feedback"
-                            />
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="direccion">Dirección</label>
-                            <Field
-                                name="direccion"
-                                type="text"
-                                v-model="form.direccion"
-                                class="form-control"
-                                :class="{ 'is-invalid': errors['direccion'] }"
-                            />
-                            <ErrorMessage
-                                name="direccion"
-                                class="invalid-feedback"
-                            />
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="celular">Celular</label>
-                            <Field
-                                id="celular"
-                                name="celular"
-                                type="number"
-                                v-model="form.celular"
-                                class="form-control"
-                                :class="{ 'is-invalid': errors['celular'] }"
-                            />
-                            <ErrorMessage
-                                name="celular"
-                                class="invalid-feedback"
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            class="btn btn-primary"
-                            style="width: 100%"
-                        >
-                            Guardar
-                        </button>
-                    </Form>
+        <form @submit.prevent="handleSubmit">
+            <div class="p-field p-grid">
+                <label for="nombre" class="p-col-fixed" style="width: 100px"
+                    >Nombre</label
+                >
+                <div class="p-col">
+                    <InputText
+                        id="nombre"
+                        type="text"
+                        v-model="form.nombre"
+                        class="p-inputtext p-component"
+                        :class="{ 'p-invalid': errors.nombre }"
+                    />
+                    <small v-if="errors.nombre" class="p-error">{{
+                        errors.nombre
+                    }}</small>
                 </div>
             </div>
-        </div>
-    </div>
+            <div class="p-field p-grid">
+                <label for="direccion" class="p-col-fixed" style="width: 100px"
+                    >Dirección</label
+                >
+                <div class="p-col">
+                    <InputText
+                        id="direccion"
+                        type="text"
+                        v-model="form.direccion"
+                        class="p-inputtext p-component"
+                        :class="{ 'p-invalid': errors.direccion }"
+                    />
+                    <small v-if="errors.direccion" class="p-error">{{
+                        errors.direccion
+                    }}</small>
+                </div>
+            </div>
+
+            <div class="p-field p-grid">
+                <label for="celular" class="p-col-fixed" style="width: 100px"
+                    >Celular</label
+                >
+                <div class="p-col">
+                    <InputText
+                        id="celular"
+                        type="text"
+                        v-model="form.celular"
+                        class="p-inputtext p-component"
+                        :class="{ 'p-invalid': errors.celular }"
+                    />
+                    <small v-if="errors.celular" class="p-error">{{
+                        errors.celular
+                    }}</small>
+                </div>
+            </div>
+
+            <div class="p-field p-grid">
+                <label for="tipo" class="p-col-fixed" style="width: 100px"
+                    >Tipo</label
+                >
+                <div class="p-col">
+                    <Dropdown
+                        id="tipo"
+                        v-model="form.tipo_modista_id"
+                        :options="rpTipoModista"
+                        optionLabel="name"
+                        optionValue="id"
+                        placeholder="Seleccione un tipo"
+                        class="p-dropdown p-component"
+                        :class="{ 'p-invalid': errors.tipo_modista_id }"
+                    />
+                    <small v-if="errors.tipo_modista_id" class="p-error">{{
+                        errors.tipo_modista_id
+                    }}</small>
+                </div>
+            </div>
+
+            <Button
+                label="Enviar"
+                type="submit"
+                class="p-button p-component p-button-primary"
+                style="width: 100%; margin-top: 20px;"
+            />
+        </form>
+    </Dialog>
 </template>
 
 <script>
-import { Form, Field, ErrorMessage } from "vee-validate";
-import * as yup from "yup";
-import { setLocale } from "yup";
-import { es } from "yup-locales";
-
-setLocale(es);
+import * as Yup from "yup";
+import InputText from "primevue/inputtext";
+import Dropdown from "primevue/dropdown";
+import Button from "primevue/button";
+import Dialog from "primevue/dialog";
 
 export default {
     components: {
-        Form,
-        Field,
-        ErrorMessage,
+        InputText,
+        Dropdown,
+        Button,
+        Dialog,
     },
-    props: ["manageModista", "dataForm"],
+    props: ["manageModista", "dataForm", "visibleModal"],
     watch: {
         dataForm(newValue) {
             if (Object.keys(newValue).length !== 0) {
@@ -106,8 +116,12 @@ export default {
                     nombre: newValue.nombre,
                     direccion: newValue.direccion,
                     celular: newValue.celular,
+                    tipo_modista_id: newValue.tipo_modista_id,
                 };
             }
+        },
+        visibleModal(value) {
+            this.visible = value;
         },
     },
     data() {
@@ -116,63 +130,77 @@ export default {
                 nombre: "",
                 direccion: "",
                 celular: "",
+                tipo_modista_id: null,
             },
+            errors: {},
+            rpTipoModista: null,
+            visible: false,
         };
     },
-    mounted() {
-        var myModalEl = document.getElementById("manageModistaModal");
-        myModalEl.addEventListener("hidden.bs.modal", () => {
-            this.resetForm();
-        });
-    },
+    mounted() {},
     created() {
-        this.form = {
-            nombre: "",
-            direccion: "",
-            celular: "",
-        };
+        this.resetForm();
+        this.getEnums();
     },
     methods: {
-        submitForm() {
-            this.$refs.form
-                .validate()
-                .then((isValid) => {
-                    if (isValid) {
-                        if (this.manageModista) {
-                            this.$emit("save", this.form);
-                        } else {
-                            this.$emit("update", this.form);
-                        }
-                        var myModalEl =
-                            document.getElementById("manageModistaModal");
-                        var modal = bootstrap.Modal.getInstance(myModalEl);
-                        modal.hide();
-                    }
-                })
-                .catch((errors) => {
-                    console.error("Errores de validación:", errors);
+        async validateForm() {
+            const schema = Yup.object().shape({
+                nombre: Yup.string().required(),
+                direccion: Yup.string().required(),
+                celular: Yup.number()
+                    .typeError("El celular debe ser un número válido")
+                    .required("El número de celular es obligatorio"),
+                tipo_modista_id: Yup.string().required(
+                    "La categoría es obligatoria"
+                ),
+            });
+            this.errors = {};
+            try {
+                await schema.validate(this.form, { abortEarly: false });
+                return true;
+            } catch (err) {
+                err.inner.forEach((error) => {
+                    this.errors[error.path] = error.message;
                 });
+                return false;
+            }
+        },
+        async handleSubmit() {
+            const isValid = await this.validateForm();
+            if (isValid) {
+                if (this.manageModista) {
+                    this.$emit("save", this.form);
+                } else {
+                    this.$emit("update", this.form);
+                }
+                this.handleDialogClose();
+            }
         },
         resetForm() {
             this.form = {
                 nombre: "",
                 direccion: "",
                 celular: "",
+                tipo_modista_id: null,
             };
-            this.$refs.form.resetForm();
+            this.selectedTipoId = null;
+            this.errors = {};
         },
-    },
-    computed: {
-        schemaCreate() {
-            return yup.object({
-                nombre: yup.string().required(),
-                direccion: yup.string().required(),
-                celular: yup
-                    .number()
-                    .typeError("El celular debe ser un número válido")
-                    .required("El número de celular es obligatorio"),
-            });
+        async getEnums() {
+            const enumsCode = ["tipo_modista"];
+            const response = await this.$getEnumsRelations(enumsCode);
+            const { tipo_modista } = response;
+            this.rpTipoModista = tipo_modista;
+        },
+        handleDialogClose() {
+            this.visible = false;
+            this.$emit("hidden", this.visible);
         },
     },
 };
 </script>
+<style>
+.text-invalid {
+    color: red;
+}
+</style>

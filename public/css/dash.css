@@ -1,23 +1,7 @@
-.card-header {
-    background-color: #2c8c99 !important;
-    color: #f7f7ff !important;
-}
-
-.ag-header-cell-label {
-    justify-content: center !important;
-}
-
-.button-container {
-    display: flex !important;
-    justify-content: flex-end !important;
-    margin-bottom: 10px !important;
-}
-
-.my-buttons {
-    background-color: #14812e !important;
-    border: 0 !important;
-}
-
-.my-buttons:hover {
-    background-color: rgb(70, 175, 22) !important;
+.custom-button-icon {
+    color: #ffffff;
+    background: #689f38;
+    border: 1px solid #689f38;
+    border-radius: 50%;
+    height: 2.357rem;
 }

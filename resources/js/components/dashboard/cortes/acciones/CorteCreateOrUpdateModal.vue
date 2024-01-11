@@ -20,7 +20,7 @@
                     ></button>
                 </div>
                 <div class="modal-body">
-                    <Form
+                    <!-- <Form
                         @submit="submitForm"
                         :validation-schema="schemaCreate"
                         v-slot="{ errors }"
@@ -115,7 +115,7 @@
                         >
                             Guardar
                         </button>
-                    </Form>
+                    </Form> -->
                 </div>
             </div>
         </div>
@@ -123,7 +123,6 @@
 </template>
 
 <script>
-import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 import { setLocale } from "yup";
 import { es } from "yup-locales";
@@ -132,9 +131,6 @@ setLocale(es);
 
 export default {
     components: {
-        Form,
-        Field,
-        ErrorMessage,
     },
     props: ["manageCorte", "dataForm"],
     watch: {
