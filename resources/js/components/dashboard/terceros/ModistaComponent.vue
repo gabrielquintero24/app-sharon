@@ -1,5 +1,5 @@
 <template>
-    <div class="card">
+    <div class="card" style="width: 100%">
         <div class="card-header">
             <font-awesome-icon :icon="['fas', 'list-ul']" /> Control de Modistas
         </div>
@@ -17,7 +17,7 @@
                 <template #end>
                     <Button
                         icon="pi pi-plus"
-                        class="mr-2 custom-button-icon"
+                        class="mr-2"
                         @click="showModal(true)"
                     />
                 </template>
@@ -38,12 +38,14 @@
                 filterDisplay="menu"
                 removableSort
                 stripedRows
+                scrollable
             >
                 <Column
                     field="nombre"
                     header="Nombres"
                     sortable
                     :showClearButton="false"
+                    style="min-width: 100px"
                 >
                     <template #body="{ data }"> {{ data.nombre }} </template
                     ><template #filter="{ filterModel }">
@@ -58,6 +60,7 @@
                     header="Dirección"
                     sortable
                     :showClearButton="false"
+                    style="min-width: 100px"
                 >
                     <template #body="{ data }"> {{ data.direccion }} </template
                     ><template #filter="{ filterModel }">
@@ -72,6 +75,7 @@
                     header="Celular"
                     sortable
                     :showClearButton="false"
+                    style="min-width: 100px"
                 >
                     <template #body="{ data }"> {{ data.celular }} </template
                     ><template #filter="{ filterModel }">
@@ -86,6 +90,7 @@
                     header="Tipo"
                     sortable
                     :showClearButton="false"
+                    style="min-width: 100px"
                 >
                     <template #body="{ data }">
                         {{ data.tipo_modista.name }} </template
@@ -96,7 +101,11 @@
                             class="p-column-filter"
                             placeholder="Buscar por tipo" /></template
                 ></Column>
-                <Column header="Acciones" field="acciones">
+                <Column
+                    header="Acciones"
+                    field="acciones"
+                    style="min-width: 100px"
+                >
                     <template #body="slotProps">
                         <span
                             style="cursor: pointer"
@@ -204,9 +213,9 @@ export default {
         showModal(type) {
             this.manageModista = type;
             this.dataForm = type ? {} : this.dataForm;
-            this.hiddenModal(true)
+            this.hiddenModal(true);
         },
-        hiddenModal(status){
+        hiddenModal(status) {
             this.visibleModal = status;
         },
         handleNewModista(newRecord) {

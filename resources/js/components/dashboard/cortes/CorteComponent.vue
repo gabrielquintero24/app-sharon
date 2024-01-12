@@ -17,7 +17,7 @@
                 <template #end>
                     <Button
                         icon="pi pi-plus"
-                        class="mr-2 custom-button-icon"
+                        class="mr-2"
                         @click="showModal(true)"
                     />
                 </template>
@@ -38,6 +38,7 @@
                 filterDisplay="menu"
                 removableSort
                 stripedRows
+                scrollable
             >
                 <Column
                     field="nombre"

@@ -11112,19 +11112,6 @@ body {
     }
 }
 
-.dash-content {
-    -webkit-box-flex: 2;
-    -webkit-flex-grow: 2;
-    -ms-flex-positive: 2;
-    flex-grow: 2;
-    padding: 25px;
-}
-@media (max-width: 767.98px) {
-    .dash-content {
-        padding: 15px 0px;
-    }
-}
-
 .dash-row {
     margin-bottom: 30px;
 }

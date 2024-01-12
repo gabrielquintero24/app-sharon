@@ -3,7 +3,7 @@
         <a href="#!" class="menu-toggle">
             <i class="fas fa-bars"></i>
         </a>
-        <a href="{{ route('home') }}" class="spur-logo"><i class="fas fa-bolt"></i> <span>Spur</span></a>
+        <a href="{{ route('home') }}" class="spur-logo"><i class="fas fa-bolt" style="color: #14BDEB"></i> <span>Sharon</span></a>
     </header>
     <nav class="dash-nav-list">
         <a href="{{ route('home') }}" class="dash-nav-item">

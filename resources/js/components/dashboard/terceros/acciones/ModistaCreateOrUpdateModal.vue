@@ -82,9 +82,9 @@
                 </div>
             </div>
             <Button
-                label="Enviar"
+                label="Guardar"
                 type="submit"
-                class="p-button p-component p-button-primary"
+                class="p-button p-button-primary custom-button-primary"
                 style="width: 100%; margin-top: 20px"
             />
         </form>
