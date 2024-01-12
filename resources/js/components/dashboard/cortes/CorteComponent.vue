@@ -4,150 +4,242 @@
             <font-awesome-icon :icon="['fas', 'shirt']" /> Control de Cortes
         </div>
         <div class="card-body">
-            <div class="button-container">
-                <button
-                    class="btn btn-primary mb-2 my-buttons"
-                    @click="showModal(true)"
-                >
-                    <font-awesome-icon :icon="['fas', 'plus']" />
-                </button>
-                <corte-create-or-update-modal
-                    :manage-corte="manageCorte"
-                    :data-form="dataForm"
-                    @save="handleNewCorte"
-                    @update="handleUpdatedCorte"
-                ></corte-create-or-update-modal>
-            </div>
-            <ag-grid-vue
-                style="width: 100%; height: 550px"
-                :class="themeClass"
-                :columnDefs="columnDefs"
-                :defaultColDef="defaultColDef"
-                :rowData="rowData"
-                :pagination="true"
-                :paginationPageSize="10"
-                :paginationPageSizeSelector="[10, 20, 30]"
-                :localeText="spanishText"
-                @grid-ready="onGridReady"
-                @cell-clicked="onCellClicked"
+            <corte-create-or-update-modal
+                :manage-corte="manageCorte"
+                :data-form="dataForm"
+                :visible-modal="visibleModal"
+                @save="handleNewCorte"
+                @update="handleUpdatedCorte"
+                @hidden="hiddenModal"
+            ></corte-create-or-update-modal>
+
+            <Toolbar>
+                <template #end>
+                    <Button
+                        icon="pi pi-plus"
+                        class="mr-2 custom-button-icon"
+                        @click="showModal(true)"
+                    />
+                </template>
+            </Toolbar>
+            <DataTable
+                v-model:filters="filters"
+                :loading="loading"
+                :value="cortes"
+                :paginator="true"
+                :rows="perPage"
+                :sortField="sortField"
+                :sortOrder="sortOrder"
+                :totalRecords="totalRecords"
+                :lazy="true"
+                @page="onPage"
+                @sort="onSort"
+                @filter="onFilters"
+                filterDisplay="menu"
+                removableSort
+                stripedRows
             >
-            </ag-grid-vue>
+                <Column
+                    field="nombre"
+                    header="Nombre"
+                    sortable
+                    :showClearButton="false"
+                >
+                    <template #body="{ data }"> {{ data.nombre }} </template
+                    ><template #filter="{ filterModel }">
+                        <InputText
+                            v-model="filterModel.value"
+                            type="text"
+                            class="p-column-filter"
+                            placeholder="Buscar por nombre" /></template
+                ></Column>
+                <Column
+                    field="codigo_referencia"
+                    header="Codigo Referencia"
+                    sortable
+                    :showClearButton="false"
+                >
+                    <template #body="{ data }">
+                        {{ data.codigo_referencia }} </template
+                    ><template #filter="{ filterModel }">
+                        <InputText
+                            v-model="filterModel.value"
+                            type="text"
+                            class="p-column-filter"
+                            placeholder="Buscar por codigo referencia" /></template
+                ></Column>
+                <Column
+                    field="cantidad_salida"
+                    header="Cantidad Salida"
+                    sortable
+                    :showClearButton="false"
+                >
+                    <template #body="{ data }">
+                        {{ data.cantidad_salida }} </template
+                    ><template #filter="{ filterModel }">
+                        <InputText
+                            v-model="filterModel.value"
+                            type="text"
+                            class="p-column-filter"
+                            placeholder="Buscar por cantidad salida" /></template
+                ></Column>
+                <Column
+                    field="cantidad_entrada"
+                    header="Cantidad Entrada"
+                    sortable
+                    :showClearButton="false"
+                >
+                    <template #body="{ data }">
+                        {{ data.cantidad_entrada }} </template
+                    ><template #filter="{ filterModel }">
+                        <InputText
+                            v-model="filterModel.value"
+                            type="text"
+                            class="p-column-filter"
+                            placeholder="Buscar por cantidad entrada" /></template
+                ></Column>
+                <Column
+                    field="fecha_creacion"
+                    header="Fecha Creación"
+                    sortable
+                    :showClearButton="false"
+                >
+                    <template #body="{ data }">
+                        {{ data.fecha_creacion }} </template
+                    ><template #filter="{ filterModel }">
+                        <InputText
+                            v-model="filterModel.value"
+                            type="text"
+                            class="p-column-filter"
+                            placeholder="Buscar por fecha creacion" /></template
+                ></Column>
+                <Column header="Acciones" field="acciones">
+                    <template #body="slotProps">
+                        <span
+                            style="cursor: pointer"
+                            @click="onRowAction(slotProps.data)"
+                        >
+                            <i class="fas fa-pencil"></i>
+                        </span>
+                    </template>
+                </Column>
+            </DataTable>
         </div>
     </div>
 </template>
 
 <script>
 // Importar Librerias o Modulos
-import { AgGridVue } from "ag-grid-vue3";
-import spanishText from "../../../translations/spanishText";
+import Column from "primevue/column";
+import Button from "primevue/button";
+import DataTable from "primevue/datatable";
+import InputText from "primevue/inputtext";
+import Toolbar from "primevue/toolbar";
+import { FilterMatchMode, FilterOperator } from "primevue/api";
 import CorteCreateOrUpdateModal from "./acciones/CorteCreateOrUpdateModal.vue";
 
 export default {
     data() {
         return {
-            spanishText,
-            defaultColDef: {
-                sortable: true,
-                flex: 1,
-                minWidth: 100,
-                resizable: false,
-            },
-            rowData: [],
-            columnDefs: [],
-            themeClass: "ag-theme-alpine",
-            showAddCorteModal: false,
-            manageCorte: true, // true - create / false - update
+            cortes: [],
+            perPage: 10,
+            totalRecords: 0,
+            page: 1,
+            sortField: "",
+            sortOrder: null,
+            filters: null,
+            filtroInfo: [],
+            loading: true,
+            manageCorte: true,
             dataForm: {},
+            rpTipoCorte: null,
+            visibleModal: false,
         };
     },
     components: {
-        AgGridVue,
-        spanishText,
+        Column,
+        Button,
+        DataTable,
+        InputText,
+        Toolbar,
+        FilterMatchMode,
+        FilterOperator,
         CorteCreateOrUpdateModal,
     },
     created() {
-        this.loadCortes();
+        this.initFilters();
     },
-    mounted() {},
+    mounted() {
+        this.fetchCortes();
+    },
     methods: {
-        onGridReady(params) {
-            this.gridApi = params.api;
-            this.gridColumnApi = params.columnApi;
+        initFilters() {
+            this.filters = {
+                nombre: {
+                    clear: false,
+                    constraints: [
+                        { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+                    ],
+                },
+                codigo_referencia: {
+                    clear: false,
+                    constraints: [
+                        { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+                    ],
+                },
+                cantidad_salida: {
+                    clear: false,
+                    constraints: [
+                        { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+                    ],
+                },
+                cantidad_entrada: {
+                    clear: false,
+                    constraints: [
+                        { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+                    ],
+                },
+                fecha_creacion: {
+                    clear: false,
+                    constraints: [
+                        { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+                    ],
+                },
+            };
         },
-        loadCortes() {
-            this.columnDefs = [
-                {
-                    headerName: "Nombre",
-                    field: "nombre",
-                    filter: true,
-                    cellStyle: { textAlign: "center" },
-                },
-                {
-                    headerName: "Codigo Referencia",
-                    field: "codigo_referencia",
-                    cellStyle: { textAlign: "center" },
-                },
-                {
-                    headerName: "Cantidad Salida",
-                    field: "cantidad_salida",
-                    cellStyle: { textAlign: "center" },
-                },
-                {
-                    headerName: "Cantidad Entrada",
-                    field: "cantidad_entrada",
-                    cellStyle: { textAlign: "center" },
-                },
-                {
-                    headerName: "Fecha Creación",
-                    field: "fecha_creacion",
-                    cellStyle: { textAlign: "center" },
-                },
-                {
-                    headerName: "Acciones",
-                    field: "acciones",
-                    headerClass: "actions",
-                    cellStyle: { textAlign: "center", cursor: "pointer" },
-                    cellRenderer: function (params) {
-                        return `<span><i class='fas fa-pencil'></i></span>`;
-                    },
-                },
-            ];
+        fetchCortes() {
             this.$axios
-                .get("/corte/list")
+                .get("/corte/list", {
+                    params: {
+                        page: this.page,
+                        perPage: this.perPage,
+                        sort: [this.sortField, this.sortOrder],
+                        filters: this.filtroInfo,
+                    },
+                })
                 .then((response) => {
-                    this.rowData = response.data;
+                    this.cortes = response.data.data;
+                    this.totalRecords = response.data.total;
+                    this.loading = false;
                 })
                 .catch((error) => {
                     this.$readStatusHttp(error);
+                    this.loading = false;
                 });
-        },
-        onCellClicked(event) {
-            if (event.colDef.field === "acciones") {
-                this.$axios
-                    .get(`/corte/show/${event.data.id}`)
-                    .then((response) => {
-                        this.dataForm = response.data;
-                        this.showModal(false);
-                    })
-                    .catch((error) => {
-                        this.$readStatusHttp(error);
-                    });
-            }
         },
         showModal(type) {
             this.manageCorte = type;
             this.dataForm = type ? {} : this.dataForm;
-            var myModal = new bootstrap.Modal(
-                document.getElementById("manageCorteModal"),
-                {}
-            );
-            myModal.show();
+            this.hiddenModal(true);
+        },
+        hiddenModal(status) {
+            this.visibleModal = status;
         },
         handleNewCorte(newRecord) {
             this.$axios
                 .post("/corte/store", newRecord)
                 .then((response) => {
-                    this.loadCortes();
+                    this.fetchCortes();
                 })
                 .catch((error) => {
                     this.$readStatusHttp(error);
@@ -157,11 +249,51 @@ export default {
             this.$axios
                 .post("/corte/update/" + newRecord.id, newRecord)
                 .then((response) => {
-                    this.loadCortes();
+                    this.fetchCortes();
                 })
                 .catch((error) => {
                     this.$readStatusHttp(error);
                 });
+        },
+        onRowAction(data) {
+            this.$axios
+                .get(`/corte/show/${data.id}`)
+                .then((response) => {
+                    this.dataForm = response.data;
+                    this.showModal(false);
+                })
+                .catch((error) => {
+                    this.$readStatusHttp(error);
+                });
+        },
+        onPage(event) {
+            this.page = event.page + 1;
+            this.perPage = event.rows;
+            this.fetchCortes();
+        },
+        onSort(event) {
+            this.page = 1;
+            this.sortField = event.sortField;
+            this.sortOrder = event.sortOrder;
+            this.fetchCortes();
+        },
+        onFilters(event) {
+            this.page = 1;
+            this.filtroInfo = [];
+            for (const [key, filter] of Object.entries(event.filters)) {
+                if (filter.constraints) {
+                    for (const constraint of filter.constraints) {
+                        if (constraint.value) {
+                            this.filtroInfo.push([
+                                this.$relationTableCorte(key),
+                                constraint.matchMode,
+                                constraint.value,
+                            ]);
+                        }
+                    }
+                }
+            }
+            this.fetchCortes();
         },
     },
 };

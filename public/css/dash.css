@@ -5,3 +5,11 @@
     border-radius: 50%;
     height: 2.357rem;
 }
+
+.my-row-spacing {
+    margin-bottom: 1rem;
+}
+
+button[data-pc-name="button"][data-pc-section="filterapplybutton"] {
+    width: 100%;
+}

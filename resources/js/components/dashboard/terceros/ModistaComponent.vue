@@ -125,7 +125,7 @@ export default {
     data() {
         return {
             modistas: [],
-            perPage: 3,
+            perPage: 10,
             totalRecords: 0,
             page: 1,
             sortField: "",
@@ -204,7 +204,7 @@ export default {
         showModal(type) {
             this.manageModista = type;
             this.dataForm = type ? {} : this.dataForm;
-            this.visibleModal = true;
+            this.hiddenModal(true)
         },
         hiddenModal(status){
             this.visibleModal = status;

@@ -9,6 +9,12 @@ export default {
                     return selector;
             }
         },
+        $relationTableCorte(selector) {
+            switch (selector) {
+                default:
+                    return selector;
+            }
+        },
     },
 };
 </script>

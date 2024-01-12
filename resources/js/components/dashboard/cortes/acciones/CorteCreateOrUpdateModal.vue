@@ -1,138 +1,123 @@
 <template>
-    <div
-        class="modal fade"
-        id="manageCorteModal"
-        tabindex="-1"
-        aria-labelledby="manageCorteModalLabel"
-        aria-hidden="true"
-    >
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="manageCorteModalLabel">
-                        {{ manageCorte ? "Agregar" : "Editar" }} Corte
-                    </h5>
-                    <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                    ></button>
-                </div>
-                <div class="modal-body">
-                    <!-- <Form
-                        @submit="submitForm"
-                        :validation-schema="schemaCreate"
-                        v-slot="{ errors }"
-                        ref="form"
-                    >
-                        <div class="form-group mb-3">
-                            <label for="nombre">Nombre</label>
-                            <Field
-                                name="nombre"
-                                type="text"
-                                v-model="form.nombre"
-                                class="form-control"
-                                :class="{ 'is-invalid': errors['nombre'] }"
-                            />
-                            <ErrorMessage
-                                name="nombre"
-                                class="invalid-feedback"
-                            />
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="codigo_referencia"
-                                >Codigo Referencia</label
-                            >
-                            <Field
-                                name="codigo_referencia"
-                                type="text"
-                                v-model="form.codigo_referencia"
-                                class="form-control"
-                                :class="{
-                                    'is-invalid': errors['codigo_referencia'],
-                                }"
-                            />
-                            <ErrorMessage
-                                name="codigo_referencia"
-                                class="invalid-feedback"
-                            />
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="cantidad_salida">Cantidad Salida</label>
-                            <Field
-                                name="cantidad_salida"
-                                type="number"
-                                v-model="form.cantidad_salida"
-                                class="form-control"
-                                :class="{
-                                    'is-invalid': errors['cantidad_salida'],
-                                }"
-                            />
-                            <ErrorMessage
-                                name="cantidad_salida"
-                                class="invalid-feedback"
-                            />
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="cantidad_entrada"
-                                >Cantidad Entrada</label
-                            >
-                            <Field
-                                name="cantidad_entrada"
-                                type="text"
-                                v-model="form.cantidad_entrada"
-                                class="form-control"
-                                :class="{
-                                    'is-invalid': errors['cantidad_entrada'],
-                                }"
-                            />
-                            <ErrorMessage
-                                name="cantidad_entrada"
-                                class="invalid-feedback"
-                            />
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="fecha_creacion">Fecha Creación</label>
-                            <Field
-                                name="fecha_creacion"
-                                type="datetime-local"
-                                v-model="form.fecha_creacion"
-                                class="form-control"
-                                :class="{
-                                    'is-invalid': errors['fecha_creacion'],
-                                }"
-                            />
-                            <ErrorMessage
-                                name="fecha_creacion"
-                                class="invalid-feedback"
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            class="btn btn-primary"
-                            style="width: 100%"
-                        >
-                            Guardar
-                        </button>
-                    </Form> -->
+    <Dialog
+        v-model:visible="visible"
+        :style="{ width: '450px' }"
+        :header="manageCorte ? 'Agregar Corte' : 'Editar Corte'"
+        :modal="true"
+        class="p-fluid p-dialog-top"
+        :position="'top'"
+        @hide="handleDialogClose"
+        ><form @submit.prevent="handleSubmit">
+            <div class="p-field p-grid my-row-spacing">
+                <label for="nombre" class="p-col-fixed">Nombre</label>
+                <div class="p-col">
+                    <InputText
+                        id="nombre"
+                        type="text"
+                        v-model="form.nombre"
+                        class="p-inputtext p-component"
+                        :class="{ 'p-invalid': errors.nombre }"
+                    />
+                    <small v-if="errors.nombre" class="p-error">{{
+                        errors.nombre
+                    }}</small>
                 </div>
             </div>
-        </div>
-    </div>
+            <div class="p-field p-grid my-row-spacing">
+                <label for="codigo_referencia" class="p-col-fixed"
+                    >Codigo Referencia</label
+                >
+                <div class="p-col">
+                    <InputText
+                        id="codigo_referencia"
+                        type="text"
+                        v-model="form.codigo_referencia"
+                        class="p-inputtext p-component"
+                        :class="{ 'p-invalid': errors.codigo_referencia }"
+                    />
+                    <small v-if="errors.codigo_referencia" class="p-error">{{
+                        errors.codigo_referencia
+                    }}</small>
+                </div>
+            </div>
+            <div class="p-field p-grid my-row-spacing">
+                <label for="cantidad_entrada" class="p-col-fixed"
+                    >Cantidad Entrada</label
+                >
+                <div class="p-col">
+                    <InputNumber
+                        id="cantidad_entrada"
+                        type="text"
+                        v-model="form.cantidad_entrada"
+                        class="p-number p-component"
+                        :class="{ 'p-invalid': errors.cantidad_entrada }"
+                        :min="0"
+                        showButtons
+                    />
+                    <small v-if="errors.cantidad_entrada" class="p-error">{{
+                        errors.cantidad_entrada
+                    }}</small>
+                </div>
+            </div>
+            <div class="p-field p-grid my-row-spacing">
+                <label for="cantidad_salida" class="p-col-fixed"
+                    >Cantidad Salida</label
+                >
+                <div class="p-col">
+                    <InputNumber
+                        id="cantidad_salida"
+                        type="text"
+                        v-model="form.cantidad_salida"
+                        class="p-number p-component"
+                        :class="{ 'p-invalid': errors.cantidad_salida }"
+                        :min="0"
+                        showButtons
+                    />
+                    <small v-if="errors.cantidad_salida" class="p-error">{{
+                        errors.cantidad_salida
+                    }}</small>
+                </div>
+            </div>
+            <div class="p-field p-grid my-row-spacing">
+                <label for="fecha_creacion" class="p-col-fixed"
+                    >Fecha Creación</label
+                >
+                <div class="p-col">
+                    <Calendar
+                        id="fecha_creacion"
+                        type="text"
+                        v-model="form.fecha_creacion"
+                        class="p-calender p-component"
+                        :class="{ 'p-invalid': errors.fecha_creacion }"
+                        showIcon
+                        dateFormat="dd/mm/yy" 
+                    />
+                    <small v-if="errors.fecha_creacion" class="p-error">{{
+                        errors.fecha_creacion
+                    }}</small>
+                </div>
+            </div>
+            <Button
+                label="Enviar"
+                type="submit"
+                class="p-button p-component p-button-primary"
+                style="width: 100%; margin-top: 20px"
+            />
+        </form>
+    </Dialog>
 </template>
 
 <script>
-import * as yup from "yup";
-import { setLocale } from "yup";
-import { es } from "yup-locales";
-
-setLocale(es);
+import * as Yup from "yup";
+import InputText from "primevue/inputtext";
+import InputNumber from "primevue/inputnumber";
+import Calendar from "primevue/calendar";
+import Dropdown from "primevue/dropdown";
+import Button from "primevue/button";
+import Dialog from "primevue/dialog";
 
 export default {
-    components: {
-    },
-    props: ["manageCorte", "dataForm"],
+    props: ["manageCorte", "dataForm", "visibleModal"],
     watch: {
         dataForm(newValue) {
             if (Object.keys(newValue).length !== 0) {
@@ -146,53 +131,89 @@ export default {
                 };
             }
         },
+        visibleModal(value) {
+            this.visible = value;
+        },
     },
     data() {
         return {
             form: {
                 nombre: "",
                 codigo_referencia: "",
-                cantidad_salida: "",
-                cantidad_entrada: "",
+                cantidad_salida: 0,
+                cantidad_entrada: 0,
                 fecha_creacion: "",
             },
+            errors: {},
+            visible: false,
         };
     },
-    mounted() {
-        var myModalEl = document.getElementById("manageCorteModal");
-        myModalEl.addEventListener("hidden.bs.modal", () => {
-            this.resetForm();
-        });
+    components: {
+        InputText,
+        InputNumber,
+        Calendar,
+        Dropdown,
+        Button,
+        Dialog,
     },
+    mounted() {},
     created() {
         this.form = {
             nombre: "",
             codigo_referencia: "",
-            cantidad_salida: "",
-            cantidad_entrada: "",
+            cantidad_salida: 0,
+            cantidad_entrada: 0,
             fecha_creacion: "",
         };
     },
     methods: {
-        submitForm() {
-            this.$refs.form
-                .validate()
-                .then((isValid) => {
-                    if (isValid) {
-                        if (this.manageCorte) {
-                            this.$emit("save", this.form);
-                        } else {
-                            this.$emit("update", this.form);
-                        }
-                        var myModalEl =
-                            document.getElementById("manageCorteModal");
-                        var modal = bootstrap.Modal.getInstance(myModalEl);
-                        modal.hide();
-                    }
-                })
-                .catch((errors) => {
-                    console.error("Errores de validación:", errors);
+        async validateForm() {
+            const schema = Yup.object().shape({
+                nombre: Yup.string().required(
+                    "El nombre es un campo requerido"
+                ),
+                codigo_referencia: Yup.string().required(
+                    "El codigo referencia es un campo requerido"
+                ),
+                cantidad_salida: Yup.number()
+                    .typeError(
+                        "La cantidad de salida debe ser un número válido"
+                    )
+                    .required("La cantidad de salida es obligatorio"),
+                cantidad_entrada: Yup.number()
+                    .nullable(true)
+                    .transform((value, originalValue) =>
+                        String(originalValue).trim() === "" ? null : value
+                    )
+                    .integer("La cantidad de entrada debe ser un número entero")
+                    .typeError(
+                        "La cantidad de entrada debe ser un número válido"
+                    ),
+                fecha_creacion: Yup.string().required(
+                    "La fecha creacion es un campo requerido"
+                ),
+            });
+            this.errors = {};
+            try {
+                await schema.validate(this.form, { abortEarly: false });
+                return true;
+            } catch (err) {
+                err.inner.forEach((error) => {
+                    this.errors[error.path] = error.message;
                 });
+                return false;
+            }
+        },
+        async handleSubmit() {
+            const isValid = await this.validateForm();
+            if (isValid) {
+                if (this.manageCorte) {
+                    this.$emit("save", this.form);
+                } else {
+                    this.$emit("update", this.form);
+                }
+                this.handleDialogClose();
+            }
         },
         resetForm() {
             this.form = {
@@ -202,36 +223,12 @@ export default {
                 cantidad_entrada: "",
                 fecha_creacion: "",
             };
-            this.$refs.form.resetForm();
+            this.errors = {};
         },
-    },
-    computed: {
-        schemaCreate() {
-            return yup.object({
-                nombre: yup.string().required(),
-                codigo_referencia: yup
-                    .string()
-                    .required("El codigo referencia es un campo requerido"),
-                cantidad_salida: yup
-                    .number()
-                    .typeError(
-                        "La cantidad de salida debe ser un número válido"
-                    )
-                    .required("La cantidad de salida es obligatorio"),
-                cantidad_entrada: yup
-                    .number()
-                    .nullable(true)
-                    .transform((value, originalValue) =>
-                        String(originalValue).trim() === "" ? null : value
-                    )
-                    .integer("La cantidad de entrada debe ser un número entero")
-                    .typeError(
-                        "La cantidad de entrada debe ser un número válido"
-                    ),
-                fecha_creacion: yup
-                    .string()
-                    .required("La fecha creacion es un campo requerido"),
-            });
+        handleDialogClose() {
+            this.resetForm();
+            this.visible = false;
+            this.$emit("hidden", this.visible);
         },
     },
 };

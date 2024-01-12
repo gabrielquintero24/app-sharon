@@ -6,11 +6,6 @@ import Swal from "sweetalert2";
 // Importacion de funciones compartidas
 import shared from "./utils/shared";
 
-// Importar AG-Grid y sus estilos
-import { AgGridVue } from "ag-grid-vue3";
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
-
 // Importacion PrimeVue
 import PrimeVue from "primevue/config";
 import esLocale from "./translations/primevue-es.json";
@@ -36,7 +31,6 @@ const app = createApp({});
 
 // Registrar componentes
 app.component("font-awesome-icon", FontAwesomeIcon);
-app.component("ag-grid-vue", AgGridVue);
 app.use(PrimeVue, {
     zIndex: {
         modal: 1100, //dialog, sidebar

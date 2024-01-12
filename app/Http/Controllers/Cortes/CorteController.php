@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Cortes;
 
 use App\Models\Corte\Corte;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -46,11 +47,18 @@ class CorteController extends Controller
         }
     }
 
-    public function getCortes()
+    public function getCortes(Request $request)
     {
         try {
-            $cortes = $this->repository->getAll();
-            return response()->json($cortes, Response::HTTP_OK);
+            $query = $this->setQuery();
+            return renderDataTable(
+                $query,
+                $request,
+                Corte::RELATION_SHIPS,
+                [
+                    'corte.*'
+                ]
+            );
         } catch (\Exception $e) {
             Log::debug($e->getMessage());
             return response()->json([], Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -66,5 +74,10 @@ class CorteController extends Controller
             Log::debug($e->getMessage());
             return response()->json([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private function setQuery()
+    {
+        return Corte::query();
     }
 }

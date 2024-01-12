@@ -9,7 +9,7 @@
         @hide="handleDialogClose"
     >
         <form @submit.prevent="handleSubmit">
-            <div class="p-field p-grid">
+            <div class="p-field p-grid my-row-spacing">
                 <label for="nombre" class="p-col-fixed" style="width: 100px"
                     >Nombre</label
                 >
@@ -26,7 +26,7 @@
                     }}</small>
                 </div>
             </div>
-            <div class="p-field p-grid">
+            <div class="p-field p-grid my-row-spacing">
                 <label for="direccion" class="p-col-fixed" style="width: 100px"
                     >Dirección</label
                 >
@@ -43,8 +43,7 @@
                     }}</small>
                 </div>
             </div>
-
-            <div class="p-field p-grid">
+            <div class="p-field p-grid my-row-spacing">
                 <label for="celular" class="p-col-fixed" style="width: 100px"
                     >Celular</label
                 >
@@ -61,8 +60,7 @@
                     }}</small>
                 </div>
             </div>
-
-            <div class="p-field p-grid">
+            <div class="p-field p-grid my-row-spacing">
                 <label for="tipo" class="p-col-fixed" style="width: 100px"
                     >Tipo</label
                 >
@@ -76,18 +74,18 @@
                         placeholder="Seleccione un tipo"
                         class="p-dropdown p-component"
                         :class="{ 'p-invalid': errors.tipo_modista_id }"
+                        showClear
                     />
                     <small v-if="errors.tipo_modista_id" class="p-error">{{
                         errors.tipo_modista_id
                     }}</small>
                 </div>
             </div>
-
             <Button
                 label="Enviar"
                 type="submit"
                 class="p-button p-component p-button-primary"
-                style="width: 100%; margin-top: 20px;"
+                style="width: 100%; margin-top: 20px"
             />
         </form>
     </Dialog>
@@ -101,12 +99,6 @@ import Button from "primevue/button";
 import Dialog from "primevue/dialog";
 
 export default {
-    components: {
-        InputText,
-        Dropdown,
-        Button,
-        Dialog,
-    },
     props: ["manageModista", "dataForm", "visibleModal"],
     watch: {
         dataForm(newValue) {
@@ -137,9 +129,14 @@ export default {
             visible: false,
         };
     },
+    components: {
+        InputText,
+        Dropdown,
+        Button,
+        Dialog,
+    },
     mounted() {},
     created() {
-        this.resetForm();
         this.getEnums();
     },
     methods: {
@@ -183,7 +180,6 @@ export default {
                 celular: "",
                 tipo_modista_id: null,
             };
-            this.selectedTipoId = null;
             this.errors = {};
         },
         async getEnums() {
@@ -193,6 +189,7 @@ export default {
             this.rpTipoModista = tipo_modista;
         },
         handleDialogClose() {
+            this.resetForm();
             this.visible = false;
             this.$emit("hidden", this.visible);
         },

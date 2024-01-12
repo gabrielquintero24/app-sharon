@@ -2,6 +2,8 @@
 
 namespace App\Models\Corte;
 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
 
 class Corte extends Model
@@ -25,4 +27,12 @@ class Corte extends Model
         'cantidad_entrada',
         'fecha_creacion'
     ];
+
+    const RELATION_SHIPS = [];
+
+    // Mutadores
+    public function setFechaCreacionAttribute($value)
+    {
+        $this->attributes['fecha_creacion'] = Carbon::parse($value)->format('Y-m-d');
+    }
 }

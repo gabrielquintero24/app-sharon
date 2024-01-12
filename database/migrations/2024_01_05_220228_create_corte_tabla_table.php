@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('codigo_referencia')->unique();
             $table->integer('cantidad_salida')->nullable()->comment("total de prendas cortadas");
             $table->integer('cantidad_entrada')->nullable()->comment("total de prendas entregadas");
-            $table->dateTime('fecha_creacion')->nullable();
+            $table->date('fecha_creacion')->nullable();
             $table->timestamps();
         });
     }
