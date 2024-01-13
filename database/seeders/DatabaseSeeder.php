@@ -15,6 +15,8 @@ class DatabaseSeeder extends Seeder
         $this->call(Configuration\MasterEnumsSeeder::class);
         $this->call(Configuration\TipoModistaEnumSeeder::class);
         $this->call(Corte\CorteSeeder::class);
+        $this->call(Especificacion\EspecificacionSeeder::class);
         $this->call(Terceros\ModistaSeeder::class);
+        $this->call(Corte\CorteEspecificacionSeeder::class);
     }
 }

@@ -2,10 +2,10 @@
 
 namespace Database\Seeders\Terceros;
 
-use App\Models\Configuration\Enums;
 use Faker\Generator as Faker;
 use Illuminate\Database\Seeder;
 use App\Models\Terceros\Modista;
+use App\Models\Configuration\Enums;
 
 class ModistaSeeder extends Seeder
 {

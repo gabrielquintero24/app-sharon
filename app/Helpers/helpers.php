@@ -22,7 +22,15 @@ function renderDataTable($query, $request , $with = [], $select = false)
         }
     }
 
-    //Log::debug($query->toSql());
+    # Condicionales
+    if ($request->has('conditions') && !empty($request->input('conditions'))) {
+        $conditions = $request->input('conditions');
+        foreach ($conditions as $column => $value) {
+            $query->where($column, $value);
+        }
+    }
+
+    Log::debug($query->toSql());
     $perPage = $request->input('perPage');
     return $query->with($with)->select($select)->paginate($perPage);
 }

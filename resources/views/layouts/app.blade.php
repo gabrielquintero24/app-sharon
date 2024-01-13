@@ -19,6 +19,7 @@
         integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,600|Open+Sans:400,600,700" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('/template/css/spur.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/dash.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 

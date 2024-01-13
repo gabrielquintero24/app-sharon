@@ -39,6 +39,7 @@
                 removableSort
                 stripedRows
                 scrollable
+                showGridlines
             >
                 <Column
                     field="nombre"
@@ -114,7 +115,11 @@
                             class="p-column-filter"
                             placeholder="Buscar por fecha creacion" /></template
                 ></Column>
-                <Column header="Acciones" field="acciones">
+                <Column
+                    header="Acciones"
+                    field="acciones"
+                    style="min-width: 100px; text-align: center"
+                >
                     <template #body="slotProps">
                         <span
                             style="cursor: pointer"

@@ -28,21 +28,13 @@ class CorteEspecificacion extends Model
         'especificacion_id'
     ];
 
-    /**
-     * Get the corte that owns the CorteEspecificacion.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+    const RELATION_SHIPS = ['corte', 'especificacion'];
+
     public function corte(): BelongsTo
     {
         return $this->belongsTo(Corte::class, 'corte_id');
     }
 
-    /**
-     * Get the especificacion that owns the CorteEspecificacion.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function especificacion(): BelongsTo
     {
         return $this->belongsTo(Especificacion::class, 'especificacion_id');

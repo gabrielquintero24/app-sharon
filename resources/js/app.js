@@ -20,11 +20,12 @@ import {
     faUsers,
     faPlus,
     faShirt,
+    faLink
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 // Añadir iconos al library de FontAwesome
-library.add(faUserSecret, faListUl, faUsers, faPlus, faShirt);
+library.add(faUserSecret, faListUl, faUsers, faPlus, faShirt, faLink);
 
 // Crear la aplicación Vue
 const app = createApp({});
@@ -45,10 +46,12 @@ app.use(PrimeVue, {
 import PrincipalComponent from "./components/dashboard/PrincipalComponent.vue";
 import ModistaComponent from "./components/dashboard/terceros/ModistaComponent.vue";
 import CorteComponent from "./components/dashboard/cortes/CorteComponent.vue";
+import CorteEspecificacionComponent from "./components/dashboard/cortes/CorteEspecificacionComponent.vue";
 
 app.component("dash-principal-component", PrincipalComponent);
 app.component("dash-modista-component", ModistaComponent);
 app.component("dash-corte-component", CorteComponent);
+app.component("dash-corte-esp-component", CorteEspecificacionComponent);
 
 // Configura Axios globalmente
 app.config.globalProperties.$axios = axios;

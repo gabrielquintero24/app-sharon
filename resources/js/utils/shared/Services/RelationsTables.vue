@@ -15,6 +15,20 @@ export default {
                     return selector;
             }
         },
+        $relationTableEspecificacion(selector) {
+            switch (selector) {
+                default:
+                    return selector;
+            }
+        },
+        $relationTableCorteEspecificacion(selector) {
+            switch (selector) {
+                case "esp_nombre":
+                    return "especificacion.nombre";
+                default:
+                    return selector;
+            }
+        },
     },
 };
 </script>

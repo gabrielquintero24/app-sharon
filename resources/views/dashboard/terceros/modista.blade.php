@@ -1,5 +1,7 @@
 @extends('layouts.dash')
 
+@section('title', 'Terceros - Modistas')
+
 @section('content-page')
     <div class="dash">
         @include('dashboard.nav.nav_izq')

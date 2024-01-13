@@ -15,7 +15,7 @@ class CorteSeeder extends Seeder
      */
     public function run(Faker $faker)
     {
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             Corte::create([
                 'nombre' => $faker->word,
                 'codigo_referencia' => $faker->unique()->bothify('CORTE###??'),

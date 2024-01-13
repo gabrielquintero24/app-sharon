@@ -10,9 +10,13 @@
 .dash-content {
     padding: 0 20px;
 }
-/* End Customers */
 
-/* Filters */
+.p-component .p-button {
+    background-color: #21a9d6;
+    color: white;
+    border: none;
+}
+
 button[data-pc-name="button"][data-pc-section="filterapplybutton"] {
     background-color: #21a9d6;
     border: 1px solid #21a9d6;
@@ -20,12 +24,13 @@ button[data-pc-name="button"][data-pc-section="filterapplybutton"] {
     border-radius: 10px;
 }
 
-/* Body */
 .dash-nav.dash-nav-dark {
     background-color: #0e3143;
 }
 
-/* Estilos generales para los botones del paginador */
+/* End Customers */
+
+/* Paginator -------------------------------*/
 .p-paginator .p-paginator-element {
     background-color: #f0f0f0;
     color: #333;
@@ -34,24 +39,23 @@ button[data-pc-name="button"][data-pc-section="filterapplybutton"] {
     border-radius: 4px;
 }
 
-/* Estilos para el botón activo / seleccionado */
 .p-paginator .p-paginator-element.p-highlight {
     background-color: #21a9d6;
     border: 1px solid #21a9d6;
     color: white;
 }
 
-/* Estilos para botones deshabilitados (primera y última página) */
 .p-paginator .p-paginator-element.p-disabled {
     background-color: #e9ecef;
     color: #6c757d;
 }
 
-/* Estilos para los íconos dentro de los botones */
 .p-paginator .p-paginator-icon {
     fill: currentColor;
 }
+/* -------------------------------*/
 
+/* Toolbars -------------------------------*/
 .p-toolbar {
     background-color: #ffff;
     color: #333;
@@ -63,32 +67,25 @@ button[data-pc-name="button"][data-pc-section="filterapplybutton"] {
 .p-toolbar .p-toolbar-group-end .p-button {
     background-color: #21a9d6;
     border: 1px solid #21a9d6;
+    border-radius: 14px;
+}
+/* -------------------------------*/
+
+/* Data tables -------------------------------*/
+.p-datatable.p-component {
+    transition: 0.3s;
+    border: 1px solid #21a9d660;
     border-radius: 5px;
 }
 
-/* Cambiar el color de fondo de los botones */
-.p-component .p-button {
+.p-datatable thead th {
     background-color: #21a9d6;
     color: white;
-    border: none;
+    border: 2px solid #1fc2f8;
 }
 
-.p-datatable.p-component {
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
-    transition: 0.3s;
-    border: 1px solid #21a9d6;
-    border-radius: 5px;
-}
-
-/* Efecto de sombra más pronunciada al pasar el mouse (hover) */
-.p-datatable.p-component:hover {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-}
-
-/* Cambiar el color de fondo de las cabeceras del DataTable */
-.p-datatable thead th {
-    background-color: #21a9d6; /* Cambia esto por el color que prefieras */
-    color: white; /* Cambia el color del texto, si es necesario */
+.p-datatable tbody td {
+    border: 1px solid #21a9d660;
 }
 
 .p-datatable thead th .p-icon {
@@ -99,7 +96,55 @@ button[data-pc-name="button"][data-pc-section="filterapplybutton"] {
     color: rgb(219, 216, 216);
 }
 
-/* Estilo para el hover en las cabeceras */
 .p-datatable thead th:hover {
-    background-color: #42b1d6; /* Color de fondo al pasar el mouse, ajusta según tus necesidades */
+    background-color: #42b1d6;
 }
+/* -------------------------------*/
+
+/* Estilo general del Dropdown */
+.p-dropdown {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background-color: #ffffff;
+}
+
+.p-dropdown-label {
+    color: #495057;
+}
+
+.p-dropdown .p-dropdown-trigger-icon {
+    color: #333333;
+}
+
+.p-dropdown-panel {
+    border-color: #dee2e6;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+    background-color: #f8f9fa;
+}
+
+.p-dropdown-item {
+    color: #000000;
+    margin-right: -30px;
+}
+
+.p-dropdown-item:hover {
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+.p-dropdown.p-disabled .p-dropdown-label,
+.p-dropdown.p-disabled .p-dropdown-trigger {
+    color: #6c757d;
+    background-color: #e9ecef;
+}
+
+.p-dropdown.p-focus .p-dropdown-trigger {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.p-dropdown-item.p-highlight,
+.p-dropdown-item.p-highlight:hover {
+    background-color: #42b1d6; /* Color de fondo de la opción seleccionada */
+    color: white; /* Color del texto de la opción seleccionada */
+}
+/* -------------------------------*/

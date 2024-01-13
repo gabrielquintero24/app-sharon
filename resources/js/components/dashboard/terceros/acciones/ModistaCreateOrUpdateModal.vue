@@ -75,6 +75,7 @@
                         class="p-dropdown p-component"
                         :class="{ 'p-invalid': errors.tipo_modista_id }"
                         showClear
+                        filter
                     />
                     <small v-if="errors.tipo_modista_id" class="p-error">{{
                         errors.tipo_modista_id

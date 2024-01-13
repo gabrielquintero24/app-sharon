@@ -104,7 +104,7 @@
                 <Column
                     header="Acciones"
                     field="acciones"
-                    style="min-width: 100px"
+                    style="min-width: 100px; text-align: center;"
                 >
                     <template #body="slotProps">
                         <span

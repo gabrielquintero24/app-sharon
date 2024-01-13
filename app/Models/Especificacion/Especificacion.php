@@ -22,4 +22,6 @@ class Especificacion extends Model
         'nombre',
         'descripcion'
     ];
+
+    const RELATION_SHIPS = [];
 }
