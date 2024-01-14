@@ -90,7 +90,7 @@
                         class="p-calender p-component"
                         :class="{ 'p-invalid': errors.fecha_creacion }"
                         showIcon
-                        dateFormat="dd/mm/yy" 
+                        dateFormat="dd/mm/yy"
                     />
                     <small v-if="errors.fecha_creacion" class="p-error">{{
                         errors.fecha_creacion
@@ -109,12 +109,6 @@
 
 <script>
 import * as Yup from "yup";
-import InputText from "primevue/inputtext";
-import InputNumber from "primevue/inputnumber";
-import Calendar from "primevue/calendar";
-import Dropdown from "primevue/dropdown";
-import Button from "primevue/button";
-import Dialog from "primevue/dialog";
 
 export default {
     props: ["manageCorte", "dataForm", "visibleModal"],
@@ -148,14 +142,7 @@ export default {
             visible: false,
         };
     },
-    components: {
-        InputText,
-        InputNumber,
-        Calendar,
-        Dropdown,
-        Button,
-        Dialog,
-    },
+    components: {},
     mounted() {},
     created() {
         this.form = {

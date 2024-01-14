@@ -13,7 +13,7 @@ class UpdateEspecificacionRequest extends FormRequest
     {
         return [
             'nombre' => 'required|string',
-            'descripcion' => 'required|string',
+            'descripcion' => 'required|string|max:512',
         ];
     }
 

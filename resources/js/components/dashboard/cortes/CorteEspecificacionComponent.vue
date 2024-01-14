@@ -4,12 +4,14 @@
             <font-awesome-icon :icon="['fas', 'link']" /> Vinculación
         </div>
         <div class="card-body">
-            <!-- <corte-create-or-update-modal
-                :manage-corte="manageVinculado"
+            <corte-especificacion-create-or-update-modal
+                :manage-vinculado="manageVinculado"
                 :data-form="dataForm"
                 :visible-modal="visibleModal"
+                @save="handleNewVinculado"
+                @update="handleUpdatedVinculado"
                 @hidden="hiddenModal"
-            ></corte-create-or-update-modal> -->
+            ></corte-especificacion-create-or-update-modal>
 
             <Toolbar>
                 <template #end>
@@ -158,6 +160,20 @@
                                         class="p-column-filter"
                                         placeholder="Buscar por precio" /></template
                             ></Column>
+                            <Column
+                                header="Acciones"
+                                field="acciones"
+                                style="min-width: 100px; text-align: center"
+                            >
+                                <template #body="slotProps">
+                                    <span
+                                        style="cursor: pointer"
+                                        @click="onRowAction(slotProps.data)"
+                                    >
+                                        <i class="fas fa-pencil"></i>
+                                    </span>
+                                </template>
+                            </Column>
                         </DataTable>
                     </div>
                 </template>
@@ -168,12 +184,8 @@
 
 <script>
 // Importar Librerias o Modulos
-import Column from "primevue/column";
-import Button from "primevue/button";
-import DataTable from "primevue/datatable";
-import InputText from "primevue/inputtext";
-import Toolbar from "primevue/toolbar";
 import { FilterMatchMode, FilterOperator } from "primevue/api";
+import CorteEspecificacionCreateOrUpdateModal from "./acciones/CorteEspecificacionCreateOrUpdateModal.vue";
 
 export default {
     data() {
@@ -201,13 +213,9 @@ export default {
         };
     },
     components: {
-        Column,
-        Button,
-        DataTable,
-        InputText,
-        Toolbar,
         FilterMatchMode,
         FilterOperator,
+        CorteEspecificacionCreateOrUpdateModal,
     },
     created() {
         this.initFilters();
@@ -294,6 +302,17 @@ export default {
         },
         hiddenModal(status) {
             this.visibleModal = status;
+        },
+        onRowAction(data) {
+            this.$axios
+                .get(`/corte-especificacion/show/${data.id}`)
+                .then((response) => {
+                    this.dataForm = response.data;
+                    this.showModal(false);
+                })
+                .catch((error) => {
+                    this.$readStatusHttp(error);
+                });
         },
         onPage(event) {
             this.page = event.page + 1;
@@ -427,6 +446,32 @@ export default {
                     delete this.expandedRowsByPage[this.page];
                 }
             }
+        },
+        handleNewVinculado(newRecord) {
+            this.$axios
+                .post("/corte-especificacion/store", newRecord)
+                .then((response) => {
+                    this.$alertSuccess("Realizado", "Especificación vinculada");
+                    this.expandedRows = [];
+                    this.expandedRowsByPage = {};
+                    this.fetchVinculacion();
+                })
+                .catch((error) => {
+                    this.$readStatusHttp(error);
+                });
+        },
+        handleUpdatedVinculado(newRecord) {
+            this.$axios
+                .post("/corte-especificacion/update/" + newRecord.id, newRecord)
+                .then((response) => {
+                    this.$alertSuccess("Realizado", "Especificación actualizada");
+                    this.expandedRows = [];
+                    this.expandedRowsByPage = {};
+                    this.fetchVinculacion();
+                })
+                .catch((error) => {
+                    this.$readStatusHttp(error);
+                });
         },
     },
 };

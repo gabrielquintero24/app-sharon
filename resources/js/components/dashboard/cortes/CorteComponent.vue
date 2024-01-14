@@ -136,11 +136,6 @@
 
 <script>
 // Importar Librerias o Modulos
-import Column from "primevue/column";
-import Button from "primevue/button";
-import DataTable from "primevue/datatable";
-import InputText from "primevue/inputtext";
-import Toolbar from "primevue/toolbar";
 import { FilterMatchMode, FilterOperator } from "primevue/api";
 import CorteCreateOrUpdateModal from "./acciones/CorteCreateOrUpdateModal.vue";
 
@@ -163,11 +158,6 @@ export default {
         };
     },
     components: {
-        Column,
-        Button,
-        DataTable,
-        InputText,
-        Toolbar,
         FilterMatchMode,
         FilterOperator,
         CorteCreateOrUpdateModal,

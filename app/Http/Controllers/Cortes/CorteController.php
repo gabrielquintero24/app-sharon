@@ -80,4 +80,8 @@ class CorteController extends Controller
     {
         return Corte::query();
     }
+
+    public function listCorteNombresAndIds(){
+        return Corte::select('id', 'nombre')->get();
+    }
 }

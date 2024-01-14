@@ -94,10 +94,6 @@
 
 <script>
 import * as Yup from "yup";
-import InputText from "primevue/inputtext";
-import Dropdown from "primevue/dropdown";
-import Button from "primevue/button";
-import Dialog from "primevue/dialog";
 
 export default {
     props: ["manageModista", "dataForm", "visibleModal"],
@@ -130,12 +126,7 @@ export default {
             visible: false,
         };
     },
-    components: {
-        InputText,
-        Dropdown,
-        Button,
-        Dialog,
-    },
+    components: {},
     mounted() {},
     created() {
         this.getEnums();

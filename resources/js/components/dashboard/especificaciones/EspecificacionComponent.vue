@@ -1,17 +1,17 @@
 <template>
     <div class="card" style="width: 100%">
         <div class="card-header">
-            <font-awesome-icon :icon="['fas', 'list-ul']" /> Control de Modistas
+            <font-awesome-icon :icon="['fas', 'list-ul']" /> Control de Especificaciones
         </div>
         <div class="card-body">
-            <modista-create-or-update-modal
-                :manage-modista="manageModista"
+            <especificacion-create-or-update-modal
+                :manage-especificacion="manageEspecificacion"
                 :data-form="dataForm"
                 :visible-modal="visibleModal"
-                @save="handleNewModista"
-                @update="handleUpdatedModista"
+                @save="handleNewEspecificacion"
+                @update="handleUpdatedEspecificacion"
                 @hidden="hiddenModal"
-            ></modista-create-or-update-modal>
+            ></especificacion-create-or-update-modal>
 
             <Toolbar>
                 <template #end>
@@ -25,7 +25,7 @@
             <DataTable
                 v-model:filters="filters"
                 :loading="loading"
-                :value="modistas"
+                :value="especificaciones"
                 :paginator="true"
                 :rows="perPage"
                 :sortField="sortField"
@@ -56,50 +56,19 @@
                             placeholder="Buscar por nombre" /></template
                 ></Column>
                 <Column
-                    field="direccion"
-                    header="Dirección"
+                    field="descripcion"
+                    header="Descripcion"
                     sortable
                     :showClearButton="false"
-                    style="min-width: 100px"
+                    style="max-width: 300px"
                 >
-                    <template #body="{ data }"> {{ data.direccion }} </template
+                    <template #body="{ data }"> {{ data.descripcion }} </template
                     ><template #filter="{ filterModel }">
                         <InputText
                             v-model="filterModel.value"
                             type="text"
                             class="p-column-filter"
-                            placeholder="Buscar por direccion" /></template
-                ></Column>
-                <Column
-                    field="celular"
-                    header="Celular"
-                    sortable
-                    :showClearButton="false"
-                    style="min-width: 100px"
-                >
-                    <template #body="{ data }"> {{ data.celular }} </template
-                    ><template #filter="{ filterModel }">
-                        <InputText
-                            v-model="filterModel.value"
-                            type="text"
-                            class="p-column-filter"
-                            placeholder="Buscar por celular" /></template
-                ></Column>
-                <Column
-                    field="tipo_modista_id"
-                    header="Tipo"
-                    sortable
-                    :showClearButton="false"
-                    style="min-width: 100px"
-                >
-                    <template #body="{ data }">
-                        {{ data.tipo_modista.name }} </template
-                    ><template #filter="{ filterModel }">
-                        <InputText
-                            v-model="filterModel.value"
-                            type="text"
-                            class="p-column-filter"
-                            placeholder="Buscar por tipo" /></template
+                            placeholder="Buscar por descripcion" /></template
                 ></Column>
                 <Column
                     header="Acciones"
@@ -123,12 +92,12 @@
 <script>
 // Importar Librerias o Modulos
 import { FilterMatchMode, FilterOperator } from "primevue/api";
-import ModistaCreateOrUpdateModal from "./acciones/ModistaCreateOrUpdateModal.vue";
+import EspecificacionCreateOrUpdateModal from "./acciones/EspecificacionCreateOrUpdateModal.vue";
 
 export default {
     data() {
         return {
-            modistas: [],
+            especificaciones: [],
             perPage: 10,
             totalRecords: 0,
             page: 1,
@@ -137,22 +106,21 @@ export default {
             filters: null,
             filtroInfo: [],
             loading: true,
-            manageModista: true,
+            manageEspecificacion: true,
             dataForm: {},
-            rpTipoModista: null,
             visibleModal: false,
         };
     },
     components: {
         FilterMatchMode,
         FilterOperator,
-        ModistaCreateOrUpdateModal,
+        EspecificacionCreateOrUpdateModal
     },
     created() {
         this.initFilters();
     },
     mounted() {
-        this.fetchModistas();
+        this.fetchEspecificaciones();
     },
     methods: {
         initFilters() {
@@ -163,26 +131,16 @@ export default {
                         { value: null, matchMode: FilterMatchMode.STARTS_WITH },
                     ],
                 },
-                direccion: {
+                descripcion: {
                     constraints: [
                         { value: null, matchMode: FilterMatchMode.STARTS_WITH },
                     ],
-                },
-                celular: {
-                    constraints: [
-                        { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-                    ],
-                },
-                tipo_modista_id: {
-                    constraints: [
-                        { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-                    ],
-                },
+                }
             };
         },
-        fetchModistas() {
+        fetchEspecificaciones() {
             this.$axios
-                .get("/modista/list", {
+                .get("/especificaciones/list", {
                     params: {
                         page: this.page,
                         perPage: this.perPage,
@@ -191,7 +149,7 @@ export default {
                     },
                 })
                 .then((response) => {
-                    this.modistas = response.data.data;
+                    this.especificaciones = response.data.data;
                     this.totalRecords = response.data.total;
                     this.loading = false;
                 })
@@ -201,28 +159,28 @@ export default {
                 });
         },
         showModal(type) {
-            this.manageModista = type;
+            this.manageEspecificacion = type;
             this.dataForm = type ? {} : this.dataForm;
             this.hiddenModal(true);
         },
         hiddenModal(status) {
             this.visibleModal = status;
         },
-        handleNewModista(newRecord) {
+        handleNewEspecificacion(newRecord) {
             this.$axios
-                .post("/modista/store", newRecord)
+                .post("/especificaciones/store", newRecord)
                 .then((response) => {
-                    this.fetchModistas();
+                    this.fetchEspecificaciones();
                 })
                 .catch((error) => {
                     this.$readStatusHttp(error);
                 });
         },
-        handleUpdatedModista(newRecord) {
+        handleUpdatedEspecificacion(newRecord) {
             this.$axios
-                .post("/modista/update/" + newRecord.id, newRecord)
+                .post("/especificaciones/update/" + newRecord.id, newRecord)
                 .then((response) => {
-                    this.fetchModistas();
+                    this.fetchEspecificaciones();
                 })
                 .catch((error) => {
                     this.$readStatusHttp(error);
@@ -230,7 +188,7 @@ export default {
         },
         onRowAction(data) {
             this.$axios
-                .get(`/modista/show/${data.id}`)
+                .get(`/especificaciones/show/${data.id}`)
                 .then((response) => {
                     this.dataForm = response.data;
                     this.showModal(false);
@@ -242,13 +200,13 @@ export default {
         onPage(event) {
             this.page = event.page + 1;
             this.perPage = event.rows;
-            this.fetchModistas();
+            this.fetchEspecificaciones();
         },
         onSort(event) {
             this.page = 1;
             this.sortField = event.sortField;
             this.sortOrder = event.sortOrder;
-            this.fetchModistas();
+            this.fetchEspecificaciones();
         },
         onFilters(event) {
             this.page = 1;
@@ -258,7 +216,7 @@ export default {
                     for (const constraint of filter.constraints) {
                         if (constraint.value) {
                             this.filtroInfo.push([
-                                this.$relationTableModista(key),
+                                this.$relationTableEspecificacion(key),
                                 constraint.matchMode,
                                 constraint.value,
                             ]);
@@ -266,7 +224,7 @@ export default {
                     }
                 }
             }
-            this.fetchModistas();
+            this.fetchEspecificaciones();
         },
     },
 };

@@ -7,16 +7,15 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Repositories\Cortes\CorteRepository;
-use App\Http\Requests\Cortes\CreateCorteRequest;
-use App\Http\Requests\Cortes\UpdateCorteRequest;
 use App\Models\Corte\CorteEspecificacion;
+use App\Repositories\CorteEspecificacion\CorteEspecificacionRepository;
+use App\Http\Requests\CorteEspecificacion\CreateCorteEspecificacionRequest;
 
 class CorteEspecificacionController extends Controller
 {
     protected $repository;
 
-    public function __construct(CorteRepository $repository)
+    public function __construct(CorteEspecificacionRepository $repository)
     {
         $this->repository = $repository;
     }
@@ -26,9 +25,30 @@ class CorteEspecificacionController extends Controller
         return view('dashboard.cortes.corte_especificacion');
     }
 
+    public function store(CreateCorteEspecificacionRequest $request)
+    {
+        try {
+            $data = $this->repository->create($request->input());
+            return response()->json($data, Response::HTTP_CREATED);
+        } catch (\Exception $e) {
+            Log::debug($e->getMessage());
+            return response()->json([], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function update(CreateCorteEspecificacionRequest $request, CorteEspecificacion $CorteEspecificacion)
+    {
+        try {
+            $data = $this->repository->update($CorteEspecificacion, $request->input());
+            return response()->json($data, Response::HTTP_CREATED);
+        } catch (\Exception $e) {
+            Log::debug($e->getMessage());
+            return response()->json([], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     public function getVinculaciones(Request $request)
     {
-        Log::debug($request->all());
         try {
             $query = $this->setQuery();
             return renderDataTable(
@@ -42,6 +62,17 @@ class CorteEspecificacionController extends Controller
                     'especificacion.nombre as esp_nombre'
                 ]
             );
+        } catch (\Exception $e) {
+            Log::debug($e->getMessage());
+            return response()->json([], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function getVinculacion($id)
+    {
+        try {
+            $data = $this->repository->getByID($id);
+            return response()->json($data, Response::HTTP_OK);
         } catch (\Exception $e) {
             Log::debug($e->getMessage());
             return response()->json([], Response::HTTP_INTERNAL_SERVER_ERROR);

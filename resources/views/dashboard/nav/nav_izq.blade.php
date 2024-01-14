@@ -13,7 +13,10 @@
             <a href="#!" class="dash-nav-item dash-nav-dropdown-toggle">
                 <i class="fas fa-shirt"></i> Cortes </a>
             <div class="dash-nav-dropdown-menu">
-                <a href="{{ route('corte.index') }}" class="dash-nav-dropdown-item">Información</a>
+                <a href="{{ route('corte.index') }}" class="dash-nav-dropdown-item">Corte</a>
+            </div>
+            <div class="dash-nav-dropdown-menu">
+                <a href="{{ route('especificaciones.index') }}" class="dash-nav-dropdown-item">Especificacion</a>
             </div>
             <div class="dash-nav-dropdown-menu">
                 <a href="{{ route('corte-especificacion.index') }}" class="dash-nav-dropdown-item">Vinculación</a>

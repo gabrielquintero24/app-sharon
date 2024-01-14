@@ -10,7 +10,35 @@ export default {
                         resolve(response.data);
                     })
                     .catch(function (error) {
-                        vm.$readStatusHttp(error); 
+                        vm.$readStatusHttp(error);
+                        reject(error);
+                    });
+            });
+        },
+        $listCorteNombresAndIds(params) {
+            const vm = this;
+            return new Promise((resolve, reject) => {
+                this.$axios
+                    .get(`/corte/nombres-ids`, params)
+                    .then(function (response) {
+                        resolve(response.data);
+                    })
+                    .catch(function (error) {
+                        vm.$readStatusHttp(error);
+                        reject(error);
+                    });
+            });
+        },
+        $listEspecificacionNombresAndIds() {
+            const vm = this;
+            return new Promise((resolve, reject) => {
+                this.$axios
+                    .get(`/especificaciones/nombres-ids`)
+                    .then(function (response) {
+                        resolve(response.data);
+                    })
+                    .catch(function (error) {
+                        vm.$readStatusHttp(error);
                         reject(error);
                     });
             });

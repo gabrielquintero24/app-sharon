@@ -80,4 +80,9 @@ class EspecificacionController extends Controller
     {
         return Especificacion::query();
     }
+
+    public function listEspecificacionNombresAndIds(){
+        return Especificacion::select('id', 'nombre')->get();
+    }
+
 }

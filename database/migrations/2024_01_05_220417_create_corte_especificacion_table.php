@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('corte_especificacion', function (Blueprint $table) {
             $table->id();
             $table->integer('cantidad');
-            $table->decimal('precio', 10, 2);
+            $table->integer('precio');
             $table->foreignId('corte_id')->constrained(table: 'corte');
             $table->foreignId('especificacion_id')->constrained(table: 'especificacion');
             $table->timestamps();

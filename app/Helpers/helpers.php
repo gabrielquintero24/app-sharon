@@ -30,7 +30,7 @@ function renderDataTable($query, $request , $with = [], $select = false)
         }
     }
 
-    Log::debug($query->toSql());
+    //Log::debug($query->toSql());
     $perPage = $request->input('perPage');
     return $query->with($with)->select($select)->paginate($perPage);
 }
