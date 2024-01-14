@@ -59,6 +59,8 @@ class AsignacionController extends Controller
                     'asignacion.id',
                     'corte.nombre',
                     'corte.codigo_referencia',
+                    'asignacion.corte_id',
+                    'asignacion.modista_id',
                 ]
             );
         } catch (\Exception $e) {

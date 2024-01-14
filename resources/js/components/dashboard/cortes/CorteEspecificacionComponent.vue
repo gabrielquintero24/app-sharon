@@ -75,7 +75,13 @@
                             placeholder="Buscar por codigo referencia" /></template
                 ></Column>
                 <template #expansion="{ data }">
-                    <div class="p-3">
+                    <div
+                        v-if="
+                            tableEspecificacionesId[data.id] &&
+                            tableEspecificacionesId[data.id].length
+                        "
+                        class="p-3"
+                    >
                         <h5>Especificaciones</h5>
                         <DataTable
                             :value="tableEspecificacionesId[data.id]"
@@ -464,7 +470,10 @@ export default {
             this.$axios
                 .post("/corte-especificacion/update/" + newRecord.id, newRecord)
                 .then((response) => {
-                    this.$alertSuccess("Realizado", "Especificación actualizada");
+                    this.$alertSuccess(
+                        "Realizado",
+                        "Especificación actualizada"
+                    );
                     this.expandedRows = [];
                     this.expandedRowsByPage = {};
                     this.fetchVinculacion();

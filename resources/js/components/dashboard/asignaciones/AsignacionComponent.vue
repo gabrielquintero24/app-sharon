@@ -77,7 +77,13 @@
                             placeholder="Buscar por tipo" /></template
                 ></Column>
                 <template #expansion="{ data }">
-                    <div class="p-3">
+                    <div
+                        v-if="
+                            tableCortesId[data.id] &&
+                            tableCortesId[data.id].length
+                        "
+                        class="p-3"
+                    >
                         <h5>Cortes</h5>
                         <DataTable
                             :value="tableCortesId[data.id]"
@@ -140,9 +146,7 @@
                                 sortable
                                 :showClearButton="false"
                                 ><template #body="{ data }">
-                                    {{
-                                        data.codigo_referencia
-                                    }} </template
+                                    {{ data.codigo_referencia }} </template
                                 ><template #filter="{ filterModel }">
                                     <InputText
                                         v-model="filterModel.value"
@@ -205,7 +209,7 @@ export default {
     components: {
         FilterMatchMode,
         FilterOperator,
-        AsignacionCreateOrUpdateModal
+        AsignacionCreateOrUpdateModal,
     },
     created() {
         this.initFilters();
@@ -435,7 +439,7 @@ export default {
                     this.$alertSuccess("Realizado", "Asignación vinculada");
                     this.expandedRows = [];
                     this.expandedRowsByPage = {};
-                    this.fetchAsignaciones();
+                    this.fetchModistas();
                 })
                 .catch((error) => {
                     this.$readStatusHttp(error);
@@ -445,13 +449,10 @@ export default {
             this.$axios
                 .post("/asignacion/update/" + newRecord.id, newRecord)
                 .then((response) => {
-                    this.$alertSuccess(
-                        "Realizado",
-                        "Asignación actualizada"
-                    );
+                    this.$alertSuccess("Realizado", "Asignación actualizada");
                     this.expandedRows = [];
                     this.expandedRowsByPage = {};
-                    this.fetchAsignaciones();
+                    this.fetchModistas();
                 })
                 .catch((error) => {
                     this.$readStatusHttp(error);
