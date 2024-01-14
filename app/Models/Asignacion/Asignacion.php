@@ -26,21 +26,13 @@ class Asignacion extends Model
         'corte_id'
     ];
 
-    /**
-     * Get the modista that owns the Asignacion.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+    const RELATION_SHIPS = ['modista', 'corte'];    
+
     public function modista(): BelongsTo
     {
         return $this->belongsTo(Modista::class, 'modista_id');
     }
 
-    /**
-     * Get the corte that owns the Asignacion.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function corte(): BelongsTo
     {
         return $this->belongsTo(Corte::class, 'corte_id');

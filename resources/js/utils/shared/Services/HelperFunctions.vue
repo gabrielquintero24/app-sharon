@@ -43,6 +43,20 @@ export default {
                     });
             });
         },
+        $listModistasNombresAndIds() {
+            const vm = this;
+            return new Promise((resolve, reject) => {
+                this.$axios
+                    .get(`/modista/nombres-ids`)
+                    .then(function (response) {
+                        resolve(response.data);
+                    })
+                    .catch(function (error) {
+                        vm.$readStatusHttp(error);
+                        reject(error);
+                    });
+            });
+        },
     },
 };
 </script>

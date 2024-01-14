@@ -78,10 +78,13 @@ class ModistaController extends Controller
         }
     }
 
-
     private function setQuery()
     {
         return Modista::query()
             ->leftJoin('enums as enum_tipo_modista', 'enum_tipo_modista.id', '=', 'modista.tipo_modista_id');
+    }
+
+    public function listModistaNombresAndIds(){
+        return Modista::select('id', 'nombre')->get();
     }
 }

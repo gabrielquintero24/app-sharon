@@ -28,6 +28,9 @@
             <div class="dash-nav-dropdown-menu">
                 <a href="{{ route('modista.index') }}" class="dash-nav-dropdown-item">Modistas</a>
             </div>
+            <div class="dash-nav-dropdown-menu">
+                <a href="{{ route('asignacion.index') }}" class="dash-nav-dropdown-item">Asignación</a>
+            </div>
         </div>
     </nav>
 </div>

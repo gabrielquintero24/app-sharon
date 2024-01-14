@@ -9,4 +9,5 @@ Route::group(['prefix' => 'modista', 'middleware' => [/* 'auth' */]], function (
     Route::get('/show/{id}', [ModistaController::class, 'getModista'])->name('modista.show');
     Route::post('/store', [ModistaController::class, 'store'])->name('modista.store');
     Route::post('/update/{modista}', [ModistaController::class, 'update'])->name('modista.update');
+    Route::get('/nombres-ids', [ModistaController::class, 'listModistaNombresAndIds'])->name('modista.nombres-ids');
 });

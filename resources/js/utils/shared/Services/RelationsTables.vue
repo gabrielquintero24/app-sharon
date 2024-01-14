@@ -29,6 +29,12 @@ export default {
                     return selector;
             }
         },
+        $relationTableAsignacion(selector) {
+            switch (selector) {
+                default:
+                    return selector;
+            }
+        },
     },
 };
 </script>

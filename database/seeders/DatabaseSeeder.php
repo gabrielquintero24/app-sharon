@@ -18,5 +18,6 @@ class DatabaseSeeder extends Seeder
         $this->call(Especificacion\EspecificacionSeeder::class);
         $this->call(Terceros\ModistaSeeder::class);
         $this->call(Corte\CorteEspecificacionSeeder::class);
+        $this->call(Asignacion\AsignacionSeeder::class);
     }
 }
